@@ -7,25 +7,37 @@ class ListNode {
 }
 
 class LinkedList {
-    append(node) {
+    
+    constructor(){
+        this.nodeValToNode = []
+    }
+
+    append(item) {
+        let node = new ListNode(item)
+        this.nodeValToNode[node.val] = node
+        
         if (!this.head) {
-            this.#setHead(node);
+            this.head = node;
             return
         }
-        this.#setTail(node);
+
+        this.#appendNodeToEndOfList(node);
+        this.tail = node;
     }
 
     toArray() {
         let arrayValue = []
 
         if (this.head) {
-            this.#appendArray(arrayValue);
+            this.#fillArrayWithLinkedListValue(arrayValue);
         }
 
         return arrayValue
     }
 
-    removeNode(node) {
+    removeNode(val) {
+        let node = this.nodeValToNode[val]
+
         if (!node) {
             return
         }
@@ -45,7 +57,7 @@ class LinkedList {
         }
     }
 
-    #setTail(node) {
+    #appendNodeToEndOfList(node) {
         if (this.tail) {
             this.tail.next = node;
             node.prev = this.tail;
@@ -55,15 +67,9 @@ class LinkedList {
             this.head.next = node;
             node.prev = this.head;
         }
-
-        this.tail = node;
     }
 
-    #setHead(node) {
-        this.head = node;
-    }
-
-    #appendArray(arrayValue) {
+    #fillArrayWithLinkedListValue(arrayValue) {
         arrayValue.push(this.head.val);
         let next = this.head.next;
         while (next) {
@@ -92,26 +98,22 @@ class LinkedList {
     }
 }
 
-var linkedList = new LinkedList()
-var itemToListNode = []
+var todoList = new LinkedList()
 
 function set(todoItem) {
-    let node = new ListNode(todoItem);
-    itemToListNode[todoItem] = node;
-    linkedList.append(node)
+    todoList.append(todoItem)
 }
 
 function getAll() {
-    return linkedList.toArray()
+    return todoList.toArray()
 }
 
 function reset() {
-    linkedList = new LinkedList()
-    itemToListNode = []
+    todoList = new LinkedList()
 }
 
 function remove(todoItem) {
-    linkedList.removeNode(itemToListNode[todoItem])
+    todoList.removeNode(todoItem)
 }
 
 export { set, getAll, reset, remove };
