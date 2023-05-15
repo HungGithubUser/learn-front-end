@@ -1,21 +1,30 @@
 'use strict';
+const IdStartingValue = 1
 
-class ListNode {
-    constructor(val) {
-        this.val = val;
+class TodoItemValue {
+    constructor(displayedText) {
+        this.displayedText = displayedText;
     }
 }
 
-class LinkedList {
-    
-    constructor(){
-        this.nodeValToNode = []
+class TodoItem {
+    constructor(id) {
+        if (!id) {
+            throw new Error("Must supply an id")
+        }
+        this.id = id
+    }
+}
+
+class TodoList {
+    constructor() {
+        this.nodeIdToNode = []
+        this.currentId = IdStartingValue
     }
 
-    append(item) {
-        let node = new ListNode(item)
-        this.nodeValToNode[node.val] = node
-        
+    append(todoItemValue) {
+        let node = this.#createNodeWithValue(todoItemValue);
+
         if (!this.head) {
             this.head = node;
             return
@@ -26,17 +35,21 @@ class LinkedList {
     }
 
     toArray() {
-        let arrayValue = []
+        let todoItems = []
 
         if (this.head) {
-            this.#fillArrayWithLinkedListValue(arrayValue);
+            this.#fillArrayWithNodes(todoItems);
         }
 
-        return arrayValue
+        return todoItems
     }
 
-    removeNode(val) {
-        let node = this.nodeValToNode[val]
+    removeNode(id) {
+        if (!this.nodeIdToNode[id]) {
+            return;
+        }
+
+        let node = this.nodeIdToNode[id]
 
         if (!node) {
             return
@@ -57,6 +70,13 @@ class LinkedList {
         }
     }
 
+    #createNodeWithValue(todoItemValue) {
+        let node = new TodoItem(this.currentId++);
+        this.nodeIdToNode[node.id] = node
+        node.value = todoItemValue;
+        return node;
+    }
+
     #appendNodeToEndOfList(node) {
         if (this.tail) {
             this.tail.next = node;
@@ -69,11 +89,11 @@ class LinkedList {
         }
     }
 
-    #fillArrayWithLinkedListValue(arrayValue) {
-        arrayValue.push(this.head.val);
+    #fillArrayWithNodes(array) {
+        array.push(this.head);
         let next = this.head.next;
         while (next) {
-            arrayValue.push(next.val);
+            array.push(next);
             next = next.next;
         }
     }
@@ -93,15 +113,15 @@ class LinkedList {
     }
 
     #removeNode(node) {
-        node.prev.next = node.next;
+    node.prev.next = node.next;
         node.next.prev = node.prev;
     }
 }
 
-var todoList = new LinkedList()
+var todoList = new TodoList()
 
-function set(todoItem) {
-    todoList.append(todoItem)
+function add(itemDisplayedText) {
+    todoList.append(new TodoItemValue(itemDisplayedText))
 }
 
 function getAll() {
@@ -109,11 +129,11 @@ function getAll() {
 }
 
 function reset() {
-    todoList = new LinkedList()
+    todoList = new TodoList()
 }
 
-function remove(todoItem) {
-    todoList.removeNode(todoItem)
+function removeById(id) {
+    todoList.removeNode(id)
 }
 
-export { set, getAll, reset, remove };
+export { add, getAll, reset, removeById };
