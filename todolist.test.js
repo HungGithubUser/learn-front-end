@@ -1,11 +1,13 @@
-import { add as addToDoList, reset as readdToDoList, getAll as getAllToDoList, removeById as removeToDoList } from "./todolist"
+'use strict';
+
+import { add as addToDoList, reset as resetToDoList, getAll as getAllToDoList, removeById as removeToDoList } from "./todolist"
 
 const learnJavaScript = "learn javascript"
 const learnPython = "learn python"
 const learnCsharp = "learn csharp"
 const learnJava = "learn java"
 
-beforeEach(() => { readdToDoList() })
+beforeEach(() => { resetToDoList() })
 
 test('should set to do list', () => { addToDoList(learnJavaScript) })
 
