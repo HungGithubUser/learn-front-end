@@ -1,13 +1,13 @@
 'use strict';
 const IdStartingValue = 1
 
-class TodoItemValue {
+class ItemValue {
     constructor(displayedText) {
         this.displayedText = displayedText;
     }
 }
 
-class TodoItem {
+class ListItem {
     constructor(id) {
         if (!id) {
             throw new Error("Must supply an id")
@@ -16,7 +16,7 @@ class TodoItem {
     }
 }
 
-class TodoList {
+class LinkedList {
     constructor() {
         this.nodeIdToNode = []
         this.currentId = IdStartingValue
@@ -38,7 +38,18 @@ class TodoList {
         let todoItems = []
 
         if (this.head) {
-            this.#fillArrayWithNodes(todoItems);
+            this.#fillArrayWithAllNodes(todoItems);
+        }
+
+        return todoItems
+    }
+
+    getTopNodeAsArray(count) {
+        let todoItems = []
+
+        if (count > 0 && this.head) {
+            this.#fillArrayWithTopNNodes(todoItems, count);
+
         }
 
         return todoItems
@@ -71,7 +82,7 @@ class TodoList {
     }
 
     #createNodeWithValue(todoItemValue) {
-        let node = new TodoItem(this.currentId++);
+        let node = new ListItem(this.currentId++);
         this.nodeIdToNode[node.id] = node
         node.value = todoItemValue;
         return node;
@@ -89,11 +100,21 @@ class TodoList {
         }
     }
 
-    #fillArrayWithNodes(array) {
+    #fillArrayWithAllNodes(array) {
         array.push(this.head);
         let next = this.head.next;
         while (next) {
             array.push(next);
+            next = next.next;
+        }
+    }
+
+    #fillArrayWithTopNNodes(array, n) {
+        array.push(this.head)
+        let remain = n - 1
+        let next = this.head.next
+        while (remain-- > 0 && next) {
+            array.push(next)
             next = next.next;
         }
     }
@@ -113,27 +134,29 @@ class TodoList {
     }
 
     #removeNode(node) {
-    node.prev.next = node.next;
+        node.prev.next = node.next;
         node.next.prev = node.prev;
     }
 }
 
-var todoList = new TodoList()
+export class TodoList{
+    constructor(){
+        this.todoList = new LinkedList()
+    }
 
-function add(itemDisplayedText) {
-    todoList.append(new TodoItemValue(itemDisplayedText))
+    add(itemDisplayedText) {
+        this.todoList.append(new ItemValue(itemDisplayedText))
+    }
+    
+    getAll() {
+        return this.todoList.toArray()
+    }
+    
+    getTop(count) {
+        return this.todoList.getTopNodeAsArray(count)
+    }
+    
+    removeById(id) {
+        this.todoList.removeNode(id)
+    }
 }
-
-function getAll() {
-    return todoList.toArray()
-}
-
-function reset() {
-    todoList = new TodoList()
-}
-
-function removeById(id) {
-    todoList.removeNode(id)
-}
-
-export { add, getAll, reset, removeById };

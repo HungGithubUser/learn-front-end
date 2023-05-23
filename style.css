@@ -1,0 +1,10 @@
+.ordered-todo-list {
+    padding: 0;
+    list-style-position: inside;
+    width: max-content;
+    margin: auto;
+}
+
+li.ordered-todo-list--items:nth-child(odd){
+    background-color: aliceblue;
+}

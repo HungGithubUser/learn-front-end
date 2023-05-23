@@ -1,18 +1,43 @@
 'use strict';
-import { getAll } from "./todolist.js"
 
-function getAllAsOrderedList() {
-    let list = document.createElement(orderedListTagName())
-    for (const item of getAll()) {
-        let listItem = document.createElement(listItemTagName())
-        listItem.innerText = item.value.displayedText
-        list.append(listItem)
+export class TodoListDom {
+    constructor(todoList) {
+        this.todoList = todoList
     }
-    return list
+
+    static orderedListTagName = "ol"
+
+    static listItemTagName = "li"
+
+    getAllAsOrderedList() {
+        let list = this.#getNewOrderedList();
+        for (const item of this.todoList.getAll()) {
+            let listItem = this.#getNewListItem(item);
+            list.append(listItem)
+        }
+        return list
+    }
+
+    withListCssClass(cssClass) {
+        this.listCssClass = cssClass
+        return this
+    }
+
+    withListItemsCssClass(cssClass){
+        this.listItemCssClass = cssClass
+        return this
+    }
+
+    #getNewOrderedList() {
+        let list = document.createElement(TodoListDom.orderedListTagName);
+        list.className = this.listCssClass;
+        return list;
+    }
+
+    #getNewListItem(item) {
+        let listItem = document.createElement(TodoListDom.listItemTagName);
+        listItem.innerText = item.value.displayedText;
+        listItem.className = this.listItemCssClass;
+        return listItem;
+    }
 }
-
-function orderedListTagName() { return "ol" }
-
-function listItemTagName() { return "li" }
-
-export { getAllAsOrderedList, orderedListTagName, listItemTagName }

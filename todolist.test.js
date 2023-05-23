@@ -1,98 +1,139 @@
 'use strict';
 
-import { add as addToDoList, reset as resetToDoList, getAll as getAllToDoList, removeById as removeToDoList } from "./todolist"
+import { TodoList } from "./todolist"
 
 const learnJavaScript = "learn javascript"
 const learnPython = "learn python"
 const learnCsharp = "learn csharp"
 const learnJava = "learn java"
+var todoList
+beforeEach(() => { todoList = new TodoList() })
 
-beforeEach(() => { resetToDoList() })
+test('should set to do list', () => {
+  todoList.add(learnJavaScript)
+})
 
-test('should set to do list', () => { addToDoList(learnJavaScript) })
-
-test('should get empty to do list', () => { expect(getAllToDoList()).toStrictEqual([]) })
+test('should get empty to do list', () => {
+  expect(todoList.getAll()).toStrictEqual([])
+})
 
 describe('should return correct set to do item in list', () => {
   const cases = [[learnPython, learnJavaScript, learnCsharp], [learnJavaScript, learnPython, learnCsharp], [learnPython, learnCsharp, learnJavaScript]]
   test.each(cases)('set %p %p %p as todo items', (firstTodoItem, secondTodoItem, thirdTodoItem) => {
-    addToDoList(firstTodoItem);
-    addToDoList(secondTodoItem);
-    addToDoList(thirdTodoItem);
-    expect(getAllToDoList().map(x => x.value.displayedText)).toStrictEqual([firstTodoItem, secondTodoItem, thirdTodoItem]);
+    todoList.add(firstTodoItem);
+    todoList.add(secondTodoItem);
+    todoList.add(thirdTodoItem);
+    expect(getAllToDoListDisplayedText()).toStrictEqual([firstTodoItem, secondTodoItem, thirdTodoItem]);
   });
 })
 
 test('should remove to do list', () => {
-  removeToDoList(1);
-  expect(getAllToDoList()).toStrictEqual([])
+  todoList.removeById(1);
+  expect(todoList.getAll()).toStrictEqual([])
 })
 
 test('should have empty to do list when remove to do list', () => {
-  addToDoList(learnJavaScript);
-  removeToDoList(getTodoListIdByDisplayedText(learnJavaScript));
-  expect(getAllToDoList()).toStrictEqual([])
+  todoList.add(learnJavaScript);
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnJavaScript));
+  expect(getAllToDoListDisplayedText()).toStrictEqual([])
 })
 
 test('should have one to do list when remove to do list', () => {
-  addToDoList(learnJavaScript);
-  addToDoList(learnPython);
-  removeToDoList(getTodoListIdByDisplayedText(learnJavaScript));
+  todoList.add(learnJavaScript);
+  todoList.add(learnPython);
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnJavaScript));
   expect(getAllToDoListDisplayedText()).toStrictEqual([learnPython])
 })
 
 test('should have two to do list when remove middle to do list', () => {
-  addToDoList(learnJavaScript);
-  addToDoList(learnPython);
-  addToDoList(learnCsharp);
-  removeToDoList(getTodoListIdByDisplayedText(learnPython));
+  todoList.add(learnJavaScript);
+  todoList.add(learnPython);
+  todoList.add(learnCsharp);
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnPython));
   expect(getAllToDoListDisplayedText()).toStrictEqual([learnJavaScript, learnCsharp])
 })
 
 
 test('should have two to do list when remove two middle to do list', () => {
-  addToDoList(learnJavaScript);
-  addToDoList(learnPython);
-  addToDoList(learnJava);
-  addToDoList(learnCsharp);
-  removeToDoList(getTodoListIdByDisplayedText(learnPython));
-  removeToDoList(getTodoListIdByDisplayedText(learnJava));
+  todoList.add(learnJavaScript);
+  todoList.add(learnPython);
+  todoList.add(learnJava);
+  todoList.add(learnCsharp);
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnPython));
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnJava));
   expect(getAllToDoListDisplayedText()).toStrictEqual([learnJavaScript, learnCsharp])
 })
 
 test('should have two to do list when remove two last to do list', () => {
-  addToDoList(learnJavaScript);
-  addToDoList(learnPython);
-  addToDoList(learnJava);
-  addToDoList(learnCsharp);
-  removeToDoList(getTodoListIdByDisplayedText(learnCsharp));
-  removeToDoList(getTodoListIdByDisplayedText(learnJava));
+  todoList.add(learnJavaScript);
+  todoList.add(learnPython);
+  todoList.add(learnJava);
+  todoList.add(learnCsharp);
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp));
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnJava));
   expect(getAllToDoListDisplayedText()).toStrictEqual([learnJavaScript, learnPython])
 })
 
 test('should have two to do list when remove two first to do list', () => {
-  addToDoList(learnJavaScript);
-  addToDoList(learnPython);
-  addToDoList(learnJava);
-  addToDoList(learnCsharp);
-  removeToDoList(getTodoListIdByDisplayedText(learnJavaScript));
-  removeToDoList(getTodoListIdByDisplayedText(learnPython));
+  todoList.add(learnJavaScript);
+  todoList.add(learnPython);
+  todoList.add(learnJava);
+  todoList.add(learnCsharp);
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnJavaScript));
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnPython));
   expect(getAllToDoListDisplayedText()).toStrictEqual([learnJava, learnCsharp])
 })
 
 test('should have one to do list when remove two same to do list', () => {
-  addToDoList(learnCsharp);
-  addToDoList(learnCsharp);
-  addToDoList(learnCsharp);
-  removeToDoList(getTodoListIdByDisplayedText(learnCsharp));
-  removeToDoList(getTodoListIdByDisplayedText(learnCsharp));
+  todoList.add(learnCsharp);
+  todoList.add(learnCsharp);
+  todoList.add(learnCsharp);
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp));
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp));
   expect(getAllToDoListDisplayedText()).toStrictEqual([learnCsharp])
 })
 
+test('should return 1 item for get top when there is 1 item in list', () => {
+  todoList.add(learnCsharp)
+  const actual = todoList.getTop(10)
+  expect(actual.length).toEqual(1)
+  expect(toDisplayedTextArray(actual)).toStrictEqual([learnCsharp])
+})
+
+test('should return 1 item for get top when there is more than 1 item in list', () => {
+  todoList.add(learnCsharp)
+  todoList.add(learnCsharp)
+  const actual = todoList.getTop(1)
+  expect(actual.length).toEqual(1)
+  expect(toDisplayedTextArray(actual)).toStrictEqual([learnCsharp])
+})
+
+test('should return 2 item for get top when there are 2 items in list', () => {
+  todoList.add(learnCsharp)
+  todoList.add(learnCsharp)
+  const actual = todoList.getTop(2)
+  expect(actual.length).toEqual(2)
+  expect(toDisplayedTextArray(actual)).toStrictEqual([learnCsharp, learnCsharp])
+})
+
+test('should return 0 item for get top when there is more than 1 item in list', () => {
+  todoList.add(learnCsharp)
+  todoList.add(learnCsharp)
+  expect(todoList.getTop(0).length).toEqual(0)
+})
+
+test('should return 0 item for get top when there is 0 item in list', () => {
+  expect(todoList.getTop(10).length).toEqual(0)
+})
+
 function getAllToDoListDisplayedText() {
-  return getAllToDoList().map(x => x.value.displayedText)
+  return toDisplayedTextArray(todoList.getAll())
 }
 
-function getTodoListIdByDisplayedText(text) {
-  return getAllToDoList().find(x => x.value.displayedText == text).id
+function getFirstTodoListIdByDisplayedText(text) {
+  return todoList.getAll().find(x => x.value.displayedText == text).id
+}
+
+function toDisplayedTextArray(array) {
+  return array.map(x => x.value.displayedText)
 }
