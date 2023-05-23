@@ -9,6 +9,12 @@ export class TodoListDom {
 
     static listItemTagName = "li"
 
+    static inputTagName = "input"
+
+    getInputField() {
+        return document.createElement(TodoListDom.inputTagName)
+    }
+
     getAllAsOrderedList() {
         let list = this.#getNewOrderedList();
         for (const item of this.todoList.getAll()) {
@@ -23,7 +29,7 @@ export class TodoListDom {
         return this
     }
 
-    withListItemsCssClass(cssClass){
+    withListItemsCssClass(cssClass) {
         this.listItemCssClass = cssClass
         return this
     }
