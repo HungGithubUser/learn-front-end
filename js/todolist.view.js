@@ -1,6 +1,9 @@
 'use strict'
 
 export class TodoListView {
+    constructor(todoList) {
+        this.todoList = todoList
+    }
 
     render(htmlElement) {
         let inputElement = document.createElement("input")
@@ -10,5 +13,6 @@ export class TodoListView {
 
     #inputKeyUp(event, element) {
         element.appendChild(document.createElement("a"))
+        this.todoList.add("learn Java Script")
     }
 }

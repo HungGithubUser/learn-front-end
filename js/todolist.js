@@ -1,4 +1,5 @@
 'use strict';
+
 const IdStartingValue = 1
 
 class ItemValue {
@@ -139,23 +140,23 @@ class LinkedList {
     }
 }
 
-export class TodoList{
-    constructor(){
+export class TodoList {
+    constructor() {
         this.todoList = new LinkedList()
     }
 
     add(itemDisplayedText) {
         this.todoList.append(new ItemValue(itemDisplayedText))
     }
-    
+
     getAll() {
         return this.todoList.toArray()
     }
-    
+
     getTop(count) {
         return this.todoList.getTopNodeAsArray(count)
     }
-    
+
     removeById(id) {
         this.todoList.removeNode(id)
     }
