@@ -41,11 +41,6 @@ test.each(["ordered-todo-list--item", "ordered-todo-list--item-1 ordered-todo-li
         expect(getFirstListItem(actual).className).toEqual(expectedListItemCssClass)
     })
 
-test('should return input field', () => {
-    let actual = sut.getInputField()
-    expect(actual.tagName.toUpperCase()).toEqual(TodoListDom.inputTagName.toUpperCase())
-})
-
 function shouldReturnOneListItemFromGetAll() {
     todoList.add(learnJavaScript);
     let actual = sut.getAllAsOrderedList();

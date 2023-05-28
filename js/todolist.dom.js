@@ -9,12 +9,6 @@ export class TodoListDom {
 
     static listItemTagName = "li"
 
-    static inputTagName = "input"
-
-    getInputField() {
-        return document.createElement(TodoListDom.inputTagName)
-    }
-
     getAllAsOrderedList() {
         let list = this.#getNewOrderedList();
         for (const item of this.todoList.getAll()) {
