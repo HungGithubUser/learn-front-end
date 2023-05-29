@@ -1,5 +1,7 @@
 'use strict'
 
+import { TodoListDom } from './todolist.dom'
+
 export class TodoListView {
     constructor(todoList) {
         this.todoList = todoList
@@ -8,11 +10,22 @@ export class TodoListView {
     render(htmlElement) {
         let inputElement = document.createElement("input")
         htmlElement.appendChild(inputElement)
-        inputElement.addEventListener('keyup', (e) => { this.#inputKeyUp(e, htmlElement) })
+        inputElement.addEventListener('keyup', (e) => {
+            this.#inputKeyUp(e, htmlElement)
+        })
     }
 
-    #inputKeyUp(event, element) {
-        element.appendChild(document.createElement("a"))
-        this.todoList.add("learn Java Script")
+    #inputKeyUp(event, elementToBeManipulated) {
+        if (event.key === "Enter") {
+            this.todoList.add(event.target.value)
+            var dom = new TodoListDom(this.todoList)
+
+            if (elementToBeManipulated.childNodes.length === 2) {
+                elementToBeManipulated.removeChild(elementToBeManipulated.lastChild);
+            }
+
+            elementToBeManipulated.appendChild(dom.getAllAsOrderedList())
+            elementToBeManipulated.childNodes[0].value = ""
+        }
     }
 }
