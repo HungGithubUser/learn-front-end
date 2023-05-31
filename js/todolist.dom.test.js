@@ -1,7 +1,7 @@
 'use strict';
 
 import { TodoList } from './todolist';
-import { TodoListDom } from './todolist.dom'
+import { TodoListDomBuilder } from './todolist.dom'
 
 const learnJavaScript = "learn javascript"
 const learnPython = "learn python"
@@ -9,7 +9,7 @@ var todoList
 var sut
 beforeEach(() => {
     todoList = new TodoList()
-    sut = new TodoListDom(todoList)
+    sut = new TodoListDomBuilder(todoList)
 })
 
 test('should have dom', () => { document.createElement("body") })
@@ -23,7 +23,7 @@ test('should return 2 list items from getAll', () => {
     todoList.add(learnPython)
     let actual = sut.getAllAsOrderedList()
     expect(actual.childElementCount).toEqual(2);
-    expect(getSecondListItem(actual).tagName.toUpperCase()).toEqual(TodoListDom.listItemTagName.toUpperCase());
+    expect(getSecondListItem(actual).tagName.toUpperCase()).toEqual(TodoListDomBuilder.listItemTagName.toUpperCase());
     expect(getSecondListItem(actual).innerText).toEqual(learnPython);
 })
 
@@ -44,9 +44,9 @@ test.each(["ordered-todo-list--item", "ordered-todo-list--item-1 ordered-todo-li
 function shouldReturnOneListItemFromGetAll() {
     todoList.add(learnJavaScript);
     let actual = sut.getAllAsOrderedList();
-    expect(actual.tagName.toUpperCase()).toEqual(TodoListDom.orderedListTagName.toUpperCase());
+    expect(actual.tagName.toUpperCase()).toEqual(TodoListDomBuilder.orderedListTagName.toUpperCase());
     expect(actual.childElementCount).toEqual(1);
-    expect(getFirstListItem(actual).tagName.toUpperCase()).toEqual(TodoListDom.listItemTagName.toUpperCase());
+    expect(getFirstListItem(actual).tagName.toUpperCase()).toEqual(TodoListDomBuilder.listItemTagName.toUpperCase());
     expect(getFirstListItem(actual).innerText).toEqual(learnJavaScript);
 }
 

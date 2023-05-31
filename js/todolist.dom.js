@@ -1,6 +1,6 @@
 'use strict';
 
-export class TodoListDom {
+export class TodoListDomBuilder {
     constructor(todoList) {
         this.todoList = todoList
     }
@@ -29,13 +29,13 @@ export class TodoListDom {
     }
 
     #getNewOrderedList() {
-        let list = document.createElement(TodoListDom.orderedListTagName);
+        let list = document.createElement(TodoListDomBuilder.orderedListTagName);
         list.className = this.listCssClass;
         return list;
     }
 
     #getNewListItem(item) {
-        let listItem = document.createElement(TodoListDom.listItemTagName);
+        let listItem = document.createElement(TodoListDomBuilder.listItemTagName);
         listItem.innerText = item.value.displayedText;
         listItem.className = this.listItemCssClass;
         return listItem;

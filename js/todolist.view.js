@@ -1,6 +1,6 @@
 'use strict'
 
-import { TodoListDom } from './todolist.dom'
+import { TodoListDomBuilder } from './todolist.dom.js'
 
 export class TodoListView {
     constructor(todoList) {
@@ -10,36 +10,45 @@ export class TodoListView {
     getToDoListView() {
         let htmlElement = document.createElement("div")
         let inputElement = document.createElement("input")
+        this.#wireUpInputElementToHtmlElement(inputElement, htmlElement)
+        return htmlElement
+    }
+
+    #wireUpInputElementToHtmlElement(inputElement, htmlElement) {
         inputElement.addEventListener('keyup', (e) => {
             this.#inputKeyUp(e, htmlElement)
         })
         htmlElement.appendChild(inputElement)
-        return htmlElement
     }
 
     #inputKeyUp(event, htmlElementToBeManipulated) {
         if (event.key === "Enter") {
-            this.#handleKeyEnter(htmlElementToBeManipulated)
+            this.todoList.add(event.target.value)
+            this.#renderToDoList(htmlElementToBeManipulated)
+            event.target.value = ""
         }
     }
 
-    #handleKeyEnter(htmlElementToBeManipulated) {
-        this.todoList.add(htmlElementToBeManipulated.firstChild.value)
-        var dom = new TodoListDom(this.todoList)
-
-        if (this.#htmlElementCurrentlyHavingToDoList(htmlElementToBeManipulated)) {
-            this.#removeHtmlElementTodoList(htmlElementToBeManipulated)
+    #renderToDoList(htmlElementToBeManipulated) {
+        if (this.#haveOldTodoList(htmlElementToBeManipulated)) {
+            this.#removeOldTodoList(htmlElementToBeManipulated)
         }
-
-        htmlElementToBeManipulated.appendChild(dom.getAllAsOrderedList())
-        htmlElementToBeManipulated.childNodes[0].value = ""
+        this.#renderNewToDoList(htmlElementToBeManipulated)
     }
 
-    #htmlElementCurrentlyHavingToDoList(elementToBeManipulated) {
+    #haveOldTodoList(elementToBeManipulated) {
         return elementToBeManipulated.childNodes.length === 2
     }
 
-    #removeHtmlElementTodoList(elementToBeManipulated) {
+    #removeOldTodoList(elementToBeManipulated) {
         elementToBeManipulated.removeChild(elementToBeManipulated.lastChild)
+    }
+
+    #renderNewToDoList(htmlElementToBeManipulated) {
+        var domBuilder = new TodoListDomBuilder(this.todoList)
+        htmlElementToBeManipulated.appendChild(domBuilder
+            .withListCssClass("ordered-todo-list")
+            .withListItemsCssClass("ordered-todo-list--items")
+            .getAllAsOrderedList())
     }
 }

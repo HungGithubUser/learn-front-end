@@ -1,7 +1,4 @@
 import { TodoList } from "./js/todolist.js";
-import { TodoListDom } from "./js/todolist.dom.js";
+import { TodoListView } from "./js/todolist.view.js";
 var list = new TodoList();
-document.body.append(new TodoListDom(list)
-    .withListCssClass("ordered-todo-list")
-    .withListItemsCssClass("ordered-todo-list--items")
-    .getAllAsOrderedList())
+document.body.append(new TodoListView(list).getToDoListView())
