@@ -7,25 +7,39 @@ export class TodoListView {
         this.todoList = todoList
     }
 
-    render(htmlElement) {
+    getToDoListView() {
+        let htmlElement = document.createElement("div")
         let inputElement = document.createElement("input")
-        htmlElement.appendChild(inputElement)
         inputElement.addEventListener('keyup', (e) => {
             this.#inputKeyUp(e, htmlElement)
         })
+        htmlElement.appendChild(inputElement)
+        return htmlElement
     }
 
-    #inputKeyUp(event, elementToBeManipulated) {
+    #inputKeyUp(event, htmlElementToBeManipulated) {
         if (event.key === "Enter") {
-            this.todoList.add(event.target.value)
-            var dom = new TodoListDom(this.todoList)
-
-            if (elementToBeManipulated.childNodes.length === 2) {
-                elementToBeManipulated.removeChild(elementToBeManipulated.lastChild);
-            }
-
-            elementToBeManipulated.appendChild(dom.getAllAsOrderedList())
-            elementToBeManipulated.childNodes[0].value = ""
+            this.#handleKeyEnter(htmlElementToBeManipulated)
         }
+    }
+
+    #handleKeyEnter(htmlElementToBeManipulated) {
+        this.todoList.add(htmlElementToBeManipulated.firstChild.value)
+        var dom = new TodoListDom(this.todoList)
+
+        if (this.#htmlElementCurrentlyHavingToDoList(htmlElementToBeManipulated)) {
+            this.#removeHtmlElementTodoList(htmlElementToBeManipulated)
+        }
+
+        htmlElementToBeManipulated.appendChild(dom.getAllAsOrderedList())
+        htmlElementToBeManipulated.childNodes[0].value = ""
+    }
+
+    #htmlElementCurrentlyHavingToDoList(elementToBeManipulated) {
+        return elementToBeManipulated.childNodes.length === 2
+    }
+
+    #removeHtmlElementTodoList(elementToBeManipulated) {
+        elementToBeManipulated.removeChild(elementToBeManipulated.lastChild)
     }
 }

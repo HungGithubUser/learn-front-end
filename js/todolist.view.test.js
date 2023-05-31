@@ -14,8 +14,7 @@ beforeEach(() => {
 })
 
 test('should add one todolist item successfully when input is entered', () => {
-    let actual = document.createElement("div")
-    sut.render(actual)
+    let actual = sut.getToDoListView()
 
     expect(getFirstChild(actual)).toBeTruthy();
     expect(getFirstChild(actual).tagName.toUpperCase()).toEqual("input".toUpperCase())
