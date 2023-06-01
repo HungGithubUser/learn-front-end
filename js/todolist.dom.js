@@ -47,7 +47,7 @@ export class TodoListDomBuilder {
         if (this.hasDeleteButton) {
             listItem.append(this.#getNewDeleteButtonForToDoListItem(item))
         }
-        
+
         return listItem;
     }
 
@@ -56,6 +56,7 @@ export class TodoListDomBuilder {
         button.value = item.id;
         button.name = TodoListDomBuilder.deleteButtonName;
         button.textContent = TodoListDomBuilder.deleteButtonTextContent;
+        button.setAttribute("type", "button")
         return button;
     }
 }

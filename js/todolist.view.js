@@ -57,13 +57,7 @@ export class TodoListView {
 
     #renderNewToDoList(htmlElementToBeManipulated) {
         let todoList = this.#getNewTodoListOrderedListHtmlElement()
-        let deleteButton = todoList.querySelector(TodoListDomBuilder.deleteButtonNameQuerySelector)
-        if (deleteButton) {
-            deleteButton.addEventListener("click", (e) => {
-                this.todoList.removeById(Number(e.target.value))
-                this.#renderToDoList(htmlElementToBeManipulated)
-            })
-        }
+        this.#addDeleteButtons(todoList, htmlElementToBeManipulated)
         htmlElementToBeManipulated.appendChild(todoList)
     }
 
@@ -73,5 +67,23 @@ export class TodoListView {
             .withListItemsCssClass("ordered-todo-list--items")
             .withDeleteButton()
             .getOrderedList(this.todoList.getAll())
+    }
+
+    #addDeleteButtons(todoList, htmlElementToBeManipulated) {
+        let deleteButtons = todoList.querySelectorAll(TodoListDomBuilder.deleteButtonNameQuerySelector)
+        this.#wireUpDeleteButtonsClickEvents(deleteButtons, htmlElementToBeManipulated)
+    }
+
+    #wireUpDeleteButtonsClickEvents(deleteButtons, htmlElementToBeManipulated) {
+        for (let button of deleteButtons) {
+            button.addEventListener("click", (e) => {
+                this.#deleteButtonClicked(e.target, htmlElementToBeManipulated)
+            })
+        }
+    }
+
+    #deleteButtonClicked(button, htmlElementToBeManipulated) {
+        this.todoList.removeById(Number(button.value))
+        this.#renderToDoList(htmlElementToBeManipulated)
     }
 }
