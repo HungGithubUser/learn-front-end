@@ -9,9 +9,16 @@ export class TodoListView {
 
     getToDoListView() {
         let htmlElement = document.createElement("div")
-        let inputElement = document.createElement("input")
+        let inputElement = this.#getInputElementWithSupportedAttributes()
         this.#wireUpInputElementToHtmlElement(inputElement, htmlElement)
         return htmlElement
+    }
+
+    #getInputElementWithSupportedAttributes() {
+        let input = document.createElement("input")
+        input.setAttribute("aria-label", "add to do list")
+        input.setAttribute("placeholder", "Add to do list")
+        return input
     }
 
     #wireUpInputElementToHtmlElement(inputElement, htmlElement) {
@@ -23,10 +30,14 @@ export class TodoListView {
 
     #inputKeyUp(event, htmlElementToBeManipulated) {
         if (event.key === "Enter") {
-            this.todoList.add(event.target.value)
-            this.#renderToDoList(htmlElementToBeManipulated)
+            this.#addTodoList(event.target, htmlElementToBeManipulated)
             event.target.value = ""
         }
+    }
+
+    #addTodoList(htmlInputElement, htmlElementToBeManipulated) {
+        this.todoList.add(htmlInputElement.value)
+        this.#renderToDoList(htmlElementToBeManipulated)
     }
 
     #renderToDoList(htmlElementToBeManipulated) {
@@ -45,10 +56,16 @@ export class TodoListView {
     }
 
     #renderNewToDoList(htmlElementToBeManipulated) {
-        var domBuilder = new TodoListDomBuilder(this.todoList)
-        htmlElementToBeManipulated.appendChild(domBuilder
+        let todoList = this.#getNewTodoListOrderedListHtmlElement()
+        htmlElementToBeManipulated.appendChild(todoList)
+    }
+
+    #getNewTodoListOrderedListHtmlElement() {
+        let domBuilder = new TodoListDomBuilder()
+        return domBuilder
             .withListCssClass("ordered-todo-list")
             .withListItemsCssClass("ordered-todo-list--items")
-            .getAllAsOrderedList())
+            .withDeleteButton()
+            .getOrderedList(this.todoList.getAll())
     }
 }
