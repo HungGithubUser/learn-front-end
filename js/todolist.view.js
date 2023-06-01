@@ -9,12 +9,12 @@ export class TodoListView {
 
     getToDoListView() {
         let htmlElement = document.createElement("div")
-        let inputElement = this.#getInputElementWithSupportedAttributes()
+        let inputElement = this.#getInputElementForAddingTodoList()
         this.#wireUpInputElementToHtmlElement(inputElement, htmlElement)
         return htmlElement
     }
 
-    #getInputElementWithSupportedAttributes() {
+    #getInputElementForAddingTodoList() {
         let input = document.createElement("input")
         input.setAttribute("aria-label", "add to do list")
         input.setAttribute("placeholder", "Add to do list")
@@ -28,9 +28,9 @@ export class TodoListView {
         htmlElement.appendChild(inputElement)
     }
 
-    #inputKeyUp(event, htmlElementToBeManipulated) {
+    #inputKeyUp(event, htmlElement) {
         if (event.key === "Enter") {
-            this.#addTodoList(event.target, htmlElementToBeManipulated)
+            this.#addTodoList(event.target, htmlElement)
             event.target.value = ""
         }
     }
@@ -57,12 +57,18 @@ export class TodoListView {
 
     #renderNewToDoList(htmlElementToBeManipulated) {
         let todoList = this.#getNewTodoListOrderedListHtmlElement()
+        let deleteButton = todoList.querySelector(TodoListDomBuilder.deleteButtonNameQuerySelector)
+        if (deleteButton) {
+            deleteButton.addEventListener("click", (e) => {
+                this.todoList.removeById(Number(e.target.value))
+                this.#renderToDoList(htmlElementToBeManipulated)
+            })
+        }
         htmlElementToBeManipulated.appendChild(todoList)
     }
 
     #getNewTodoListOrderedListHtmlElement() {
-        let domBuilder = new TodoListDomBuilder()
-        return domBuilder
+        return new TodoListDomBuilder()
             .withListCssClass("ordered-todo-list")
             .withListItemsCssClass("ordered-todo-list--items")
             .withDeleteButton()

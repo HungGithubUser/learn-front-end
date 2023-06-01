@@ -1,6 +1,7 @@
 'use strict';
 
 import { TodoListView } from './todolist.view'
+import { TodoListDomBuilder } from './todolist.dom'
 import { TodoList } from './todolist'
 
 var actual
@@ -39,9 +40,10 @@ test('should add todolist items successfully when input is entered', () => {
     expect(actualInputField.value).toBe(learnJava);
 })
 
-test('should remove todolist items successfully when remove button is clicked', () => {
-    addToDoListItem(getFirstChild(actual), learnJavaScript);
-    expect(getFirstChild(getSecondChild(actual)).getElementsByTagName("button").length).toEqual(1)
+test('should remove first todolist successfully a few times when remove button is clicked', () => {
+    shouldRemoveFirstTodoListSuccessfullyWhenRemoveButtonIsClicked(learnJavaScript);
+    shouldRemoveFirstTodoListSuccessfullyWhenRemoveButtonIsClicked(learnJava);
+    shouldRemoveFirstTodoListSuccessfullyWhenRemoveButtonIsClicked(learnPython);
 })
 
 function addToDoListItem(actualInputField, valueToBeAdded) {
@@ -64,7 +66,7 @@ function expectFirstTodoListViewIsCorrect(actual) {
     expect(getFirstTodoListItem()).toBeTruthy();
     expect(getFirstTodoListItem().value.displayedText).toBe(learnJavaScript);
     expect(getSecondChild(actual).tagName.toUpperCase()).toEqual("ol".toUpperCase());
-    expect(getFirstChild(getSecondChild(actual))).toBeTruthy();
+    expect(getFirstTodoListDomItem(actual)).toBeTruthy();
 }
 
 function getFirstTodoListItem() {
@@ -81,4 +83,21 @@ function getFirstChild(htmlElement) {
 
 function getSecondChild(htmlElement) {
     return htmlElement.childNodes[1]
+}
+
+function getFirstTodoListDomItem(actual) {
+    return getFirstChild(getSecondChild(actual));
+}
+
+function shouldRemoveFirstTodoListSuccessfullyWhenRemoveButtonIsClicked(todoListText) {
+    addToDoListItem(getFirstChild(actual), todoListText);
+    expect(getFirstTodoListItemDeleteButton()).toBeTruthy();
+
+    getFirstTodoListItemDeleteButton().click();
+    expect(todoList.getAll()).toStrictEqual([]);
+    expect(getFirstTodoListDomItem(actual)).toBeFalsy();
+}
+
+function getFirstTodoListItemDeleteButton() {
+    return getFirstTodoListDomItem(actual).querySelector(TodoListDomBuilder.deleteButtonNameQuerySelector);
 }

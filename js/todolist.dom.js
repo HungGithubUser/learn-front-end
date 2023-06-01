@@ -5,8 +5,9 @@ export class TodoListDomBuilder {
     static orderedListTagName = "ol"
     static listItemTagName = "li"
     static buttonTagName = "button"
-    static deleteButtonName = "delete"
+    static deleteButtonName = "Delete"
     static deleteButtonTextContent = TodoListDomBuilder.deleteButtonName
+    static deleteButtonNameQuerySelector = "[name='" + TodoListDomBuilder.deleteButtonName + "']"
 
     getOrderedList(todoListItems) {
         let list = this.#getNewOrderedList();
@@ -44,13 +45,13 @@ export class TodoListDomBuilder {
         listItem.className = this.listItemCssClass;
 
         if (this.hasDeleteButton) {
-            listItem.append(this.#getNewDeleteButton(item))
+            listItem.append(this.#getNewDeleteButtonForToDoListItem(item))
         }
         
         return listItem;
     }
 
-    #getNewDeleteButton(item) {
+    #getNewDeleteButtonForToDoListItem(item) {
         let button = document.createElement(TodoListDomBuilder.buttonTagName);
         button.value = item.id;
         button.name = TodoListDomBuilder.deleteButtonName;
