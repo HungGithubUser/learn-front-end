@@ -1,7 +1,7 @@
 'use strict';
 
 import { TodoList } from './todolist';
-import { TodoListDomBuilder } from './todolist.dom'
+import { TodoListDom } from './todolist.dom'
 
 const learnJavaScript = "learn javascript"
 const learnPython = "learn python"
@@ -9,7 +9,7 @@ var todoList
 var sut
 beforeEach(() => {
     todoList = new TodoList()
-    sut = new TodoListDomBuilder()
+    sut = new TodoListDom()
 })
 
 test('should have dom', () => { document.createElement("body") })
@@ -23,7 +23,7 @@ test('should return 2 list items from getAll', () => {
     todoList.add(learnPython)
     let actual = sut.getOrderedList(todoList.getAll())
     expect(actual.childElementCount).toEqual(2);
-    expect(getSecondListItem(actual).tagName.toUpperCase()).toEqual(TodoListDomBuilder.listItemTagName.toUpperCase());
+    expect(getSecondListItem(actual).tagName.toUpperCase()).toEqual(TodoListDom.listItemTagName.toUpperCase());
     expect(getSecondListItem(actual).innerText).toEqual(learnPython);
 })
 
@@ -46,16 +46,36 @@ test('should return 1 list item from getAll with delete button', () => {
     let actual = sut.withDeleteButton().getOrderedList(todoList.getAll())
     expect(getFirstListItemButtons(actual).length).toEqual(1)
     expect(Number(getFirstListItemButtons(actual)[0].value)).toEqual(todoList.getTop(1)[0].id)
-    expect(getFirstListItemButtons(actual)[0].name).toEqual(TodoListDomBuilder.deleteButtonName)
-    expect(getFirstListItemButtons(actual)[0].textContent).toEqual(TodoListDomBuilder.deleteButtonTextContent)
+    expect(getFirstListItemButtons(actual)[0].name).toEqual(TodoListDom.deleteButtonName)
+    expect(getFirstListItemButtons(actual)[0].textContent).toEqual(TodoListDom.deleteButtonTextContent)
+})
+
+
+test('should return all correct delete button elements', () => {
+    todoList.add(learnJavaScript);
+    todoList.add(learnPython);
+    let actual = TodoListDom.getAllDeleteButtons(sut.withDeleteButton().getOrderedList(todoList.getAll()))
+
+    expect(actual.length).toEqual(2)
+    expect(Number(actual[0].value)).toEqual(todoList.getTop(1)[0].id)
+    expect(actual[0].name).toEqual(TodoListDom.deleteButtonName)
+    expect(actual[0].textContent).toEqual(TodoListDom.deleteButtonTextContent)
+    expect(Number(actual[1].value)).toEqual(todoList.getTop(2)[1].id)
+    expect(actual[1].name).toEqual(TodoListDom.deleteButtonName)
+    expect(actual[1].textContent).toEqual(TodoListDom.deleteButtonTextContent)
+})
+
+test('should return empty delete button elements', () => {
+    let actual = TodoListDom.getAllDeleteButtons(sut.withDeleteButton().getOrderedList(todoList.getAll()))
+    expect(actual.length).toEqual(0)
 })
 
 function shouldReturnOneListItemFromGetAll() {
     todoList.add(learnJavaScript);
     let actual = sut.getOrderedList(todoList.getAll());
-    expect(actual.tagName.toUpperCase()).toEqual(TodoListDomBuilder.orderedListTagName.toUpperCase());
+    expect(actual.tagName.toUpperCase()).toEqual(TodoListDom.orderedListTagName.toUpperCase());
     expect(actual.childElementCount).toEqual(1);
-    expect(getFirstListItem(actual).tagName.toUpperCase()).toEqual(TodoListDomBuilder.listItemTagName.toUpperCase());
+    expect(getFirstListItem(actual).tagName.toUpperCase()).toEqual(TodoListDom.listItemTagName.toUpperCase());
     expect(getFirstListItem(actual).innerText).toEqual(learnJavaScript);
 }
 
@@ -68,5 +88,5 @@ function getSecondListItem(actual) {
 }
 
 function getFirstListItemButtons(actual) {
-    return getFirstListItem(actual).getElementsByTagName(TodoListDomBuilder.buttonTagName);
+    return getFirstListItem(actual).getElementsByTagName(TodoListDom.buttonTagName);
 }

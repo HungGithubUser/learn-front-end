@@ -1,7 +1,7 @@
 'use strict';
 
 import { TodoListView } from './todolist.view'
-import { TodoListDomBuilder } from './todolist.dom'
+import { TodoListDom } from './todolist.dom'
 import { TodoList } from './todolist'
 
 var actual
@@ -120,9 +120,9 @@ function shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualI
 }
 
 function getFirstTodoListItemDeleteButton() {
-    return getFirstTodoListDomItem().querySelector(TodoListDomBuilder.deleteButtonNameQuerySelector);
+    return TodoListDom.getAllDeleteButtons(getSecondChild(actual))[0];
 }
 
 function getSecondTodoListItemDeleteButton() {
-    return getSecondTodoListDomItem().querySelector(TodoListDomBuilder.deleteButtonNameQuerySelector);
+    return TodoListDom.getAllDeleteButtons(getSecondChild(actual))[1];
 }

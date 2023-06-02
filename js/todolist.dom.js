@@ -1,13 +1,13 @@
 'use strict';
 
-export class TodoListDomBuilder {
+export class TodoListDom {
 
     static orderedListTagName = "ol"
     static listItemTagName = "li"
     static buttonTagName = "button"
     static deleteButtonName = "Delete"
-    static deleteButtonTextContent = TodoListDomBuilder.deleteButtonName
-    static deleteButtonNameQuerySelector = "[name='" + TodoListDomBuilder.deleteButtonName + "']"
+    static deleteButtonTextContent = TodoListDom.deleteButtonName
+    static #deleteButtonNameQuerySelector = "[name='" + TodoListDom.deleteButtonName + "']"
 
     getOrderedList(todoListItems) {
         let list = this.#getNewOrderedList();
@@ -33,29 +33,33 @@ export class TodoListDomBuilder {
         return this
     }
 
+    static getAllDeleteButtons(orderedList){
+        return orderedList.querySelectorAll(this.#deleteButtonNameQuerySelector)
+    }
+
     #getNewOrderedList() {
-        let list = document.createElement(TodoListDomBuilder.orderedListTagName);
+        let list = document.createElement(TodoListDom.orderedListTagName);
         list.className = this.listCssClass;
         return list;
     }
 
     #getNewListItem(item) {
-        let listItem = document.createElement(TodoListDomBuilder.listItemTagName);
+        let listItem = document.createElement(TodoListDom.listItemTagName);
         listItem.innerText = item.value.displayedText;
         listItem.className = this.listItemCssClass;
 
         if (this.hasDeleteButton) {
-            listItem.append(this.#getNewDeleteButtonForToDoListItem(item))
+            listItem.append(this.#getNewDeleteButtonForToDoListItem(item.id))
         }
 
         return listItem;
     }
 
-    #getNewDeleteButtonForToDoListItem(item) {
-        let button = document.createElement(TodoListDomBuilder.buttonTagName);
-        button.value = item.id;
-        button.name = TodoListDomBuilder.deleteButtonName;
-        button.textContent = TodoListDomBuilder.deleteButtonTextContent;
+    #getNewDeleteButtonForToDoListItem(itemId) {
+        let button = document.createElement(TodoListDom.buttonTagName);
+        button.value = itemId;
+        button.name = TodoListDom.deleteButtonName;
+        button.textContent = TodoListDom.deleteButtonTextContent;
         button.setAttribute("type", "button")
         return button;
     }
