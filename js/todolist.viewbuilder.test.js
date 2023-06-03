@@ -1,7 +1,7 @@
 'use strict';
 
-import { TodoListView } from './todolist.view'
-import { TodoListDom } from './todolist.dom'
+import { TodoListViewBuilder } from './todolist.viewbuilder'
+import { TodoListDomBuilder } from './todolist.dombuilder'
 import { TodoList } from './todolist'
 
 var actual
@@ -11,14 +11,14 @@ const learnPython = "learn Python"
 const learnJava = "learn Java"
 beforeEach(() => {
     todoList = new TodoList()
-    let sut = new TodoListView(todoList)
-    actual = sut.getToDoListView()
+    let sut = new TodoListViewBuilder(todoList)
+    actual = sut.withInputField().build()
 })
 
 test('should add todolist items successfully when input is entered', () => {
 
     expect(getFirstChild(actual)).toBeTruthy();
-    expect(getFirstChild(actual).tagName.toUpperCase()).toEqual("input".toUpperCase())
+    expect(getFirstChild(actual).tagName.toUpperCase()).toEqual(TodoListViewBuilder.inputTagName.toUpperCase())
 
     let actualInputField = getFirstChild(actual)
     addToDoListItem(actualInputField, learnJavaScript);
@@ -52,6 +52,14 @@ test('should remove second todolist successfully when remove button is clicked',
     shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualInputField, learnJava);
     shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualInputField, learnJavaScript);
     shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualInputField, learnPython);
+})
+
+test('should not exists input field when built without input field', () => {
+    let actualWithoutInput = new TodoListViewBuilder(todoList).build()
+
+    expect(getFirstChild(actualWithoutInput)).toBeTruthy();
+    expect(getFirstChild(actualWithoutInput).tagName.toUpperCase())
+    .toEqual(TodoListDomBuilder.orderedListTagName.toUpperCase())
 })
 
 function addToDoListItem(actualInputField, valueToBeAdded) {
@@ -120,9 +128,9 @@ function shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualI
 }
 
 function getFirstTodoListItemDeleteButton() {
-    return TodoListDom.getAllDeleteButtons(getSecondChild(actual))[0];
+    return TodoListDomBuilder.getAllDeleteButtons(getSecondChild(actual))[0];
 }
 
 function getSecondTodoListItemDeleteButton() {
-    return TodoListDom.getAllDeleteButtons(getSecondChild(actual))[1];
+    return TodoListDomBuilder.getAllDeleteButtons(getSecondChild(actual))[1];
 }

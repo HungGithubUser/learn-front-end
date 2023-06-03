@@ -24,6 +24,7 @@ describe('should return correct set to do item in list', () => {
     todoList.add(secondTodoItem);
     todoList.add(thirdTodoItem);
     expect(getAllToDoListDisplayedText()).toStrictEqual([firstTodoItem, secondTodoItem, thirdTodoItem]);
+    expect(getAllToDoListIsCompletedStatus()).toStrictEqual([false,false,false])
   });
 })
 
@@ -126,8 +127,24 @@ test('should return 0 item for get top when there is 0 item in list', () => {
   expect(todoList.getTop(10).length).toEqual(0)
 })
 
+test('should complete task successfully', () => {
+  todoList.add(learnCsharp)
+  todoList.completeTask(getFirstTodoListIdByDisplayedText(learnCsharp))
+  expect(getAllToDoListIsCompletedStatus()).toStrictEqual([true])
+})
+
+test('should complete empty taskF successfully', () => {
+  todoList.add(learnCsharp)
+  todoList.completeTask(-1)
+})
+
+
 function getAllToDoListDisplayedText() {
   return toDisplayedTextArray(todoList.getAll())
+}
+
+function getAllToDoListIsCompletedStatus() {
+  return toIsCompletedStatusArray(todoList.getAll())
 }
 
 function getFirstTodoListIdByDisplayedText(text) {
@@ -136,4 +153,8 @@ function getFirstTodoListIdByDisplayedText(text) {
 
 function toDisplayedTextArray(array) {
   return array.map(x => x.value.displayedText)
+}
+
+function toIsCompletedStatusArray(array) {
+  return array.map(x => x.value.isCompleted)
 }

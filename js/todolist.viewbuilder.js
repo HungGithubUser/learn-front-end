@@ -1,21 +1,42 @@
 'use strict'
 
-import { TodoListDom } from './todolist.dom.js'
+import { TodoListDomBuilder } from './todolist.dombuilder.js'
 
-export class TodoListView {
+export class TodoListViewBuilder {
+    static inputTagName = "input"
+
     constructor(todoList) {
         this.todoList = todoList
     }
 
-    getToDoListView() {
+    withInputField() {
+        this.hasInputField = true
+        return this
+    }
+
+    build() {
         let htmlElement = document.createElement("div")
-        let inputElement = this.#getInputElementForAddingTodoList()
-        this.#wireUpInputElementToHtmlElement(inputElement, htmlElement)
+        if (this.hasInputField) {
+            this.#addInputField(htmlElement)
+        }
+        this.#renderNewToDoList(htmlElement)
         return htmlElement
     }
 
+    #addInputField(htmlElement) {
+        let inputElement = this.#getInputElementForAddingTodoList()
+        this.#wireUpInputElementToHtmlElement(inputElement, htmlElement)
+        htmlElement.appendChild(inputElement)
+    }
+
+    #renderNewToDoList(htmlElementToBeManipulated) {
+        let todoOrderedList = this.#getNewTodoListOrderedListHtmlElement()
+        this.#addDeleteButtons(todoOrderedList, htmlElementToBeManipulated)
+        htmlElementToBeManipulated.appendChild(todoOrderedList)
+    }
+
     #getInputElementForAddingTodoList() {
-        let input = document.createElement("input")
+        let input = document.createElement(TodoListViewBuilder.inputTagName)
         input.setAttribute("aria-label", "add to do list")
         input.setAttribute("placeholder", "Add to do list")
         return input
@@ -25,7 +46,6 @@ export class TodoListView {
         inputElement.addEventListener('keyup', (e) => {
             this.#inputKeyUp(e, htmlElement)
         })
-        htmlElement.appendChild(inputElement)
     }
 
     #inputKeyUp(event, htmlElement) {
@@ -41,36 +61,26 @@ export class TodoListView {
     }
 
     #reRenderToDoList(htmlElementToBeManipulated) {
-        if (this.#haveOldTodoList(htmlElementToBeManipulated)) {
-            this.#removeOldTodoList(htmlElementToBeManipulated)
-        }
+        this.#cleanUpOldToDoListIfExists(htmlElementToBeManipulated)
         this.#renderNewToDoList(htmlElementToBeManipulated)
     }
 
-    #haveOldTodoList(elementToBeManipulated) {
-        return elementToBeManipulated.childNodes.length === 2
-    }
-
-    #removeOldTodoList(elementToBeManipulated) {
-        elementToBeManipulated.removeChild(elementToBeManipulated.lastChild)
-    }
-
-    #renderNewToDoList(htmlElementToBeManipulated) {
-        let todoOrderedList = this.#getNewTodoListOrderedListHtmlElement()
-        this.#addDeleteButtons(todoOrderedList, htmlElementToBeManipulated)
-        htmlElementToBeManipulated.appendChild(todoOrderedList)
+    #cleanUpOldToDoListIfExists(elementToBeManipulated) {
+        for (let orderedList of elementToBeManipulated.getElementsByTagName(TodoListDomBuilder.orderedListTagName)) {
+            orderedList.remove()
+        }
     }
 
     #getNewTodoListOrderedListHtmlElement() {
-        return new TodoListDom()
+        return new TodoListDomBuilder()
             .withListCssClass("ordered-todo-list")
             .withListItemsCssClass("ordered-todo-list--items")
-            .withDeleteButton()
-            .getOrderedList(this.todoList.getAll())
+            .withDeleteButtons()
+            .build(this.todoList.getAll())
     }
 
     #addDeleteButtons(todoOrderedList, htmlElementToBeManipulated) {
-        let deleteButtons = TodoListDom.getAllDeleteButtons(todoOrderedList)
+        let deleteButtons = TodoListDomBuilder.getAllDeleteButtons(todoOrderedList)
         this.#wireUpDeleteButtonsClickEvents(deleteButtons, htmlElementToBeManipulated)
     }
 

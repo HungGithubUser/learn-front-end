@@ -5,6 +5,7 @@ const IdStartingValue = 1
 class ItemValue {
     constructor(displayedText) {
         this.displayedText = displayedText;
+        this.isCompleted = false;
     }
 }
 
@@ -79,6 +80,12 @@ class LinkedList {
 
         if (node.next) {
             this.#removeNode(node);
+        }
+    }
+
+    setIsCompleted(id, isCompleted) {
+        if (this.nodeIdToNode[id]) {
+            this.nodeIdToNode[id].value.isCompleted = isCompleted
         }
     }
 
@@ -159,5 +166,9 @@ export class TodoList {
 
     removeById(id) {
         this.todoList.removeNode(id)
+    }
+
+    completeTask(id) {
+        this.todoList.setIsCompleted(id, true)
     }
 }

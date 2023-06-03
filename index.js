@@ -1,4 +1,4 @@
 import { TodoList } from "./js/todolist.js";
-import { TodoListView } from "./js/todolist.view.js";
+import { TodoListViewBuilder } from "./js/todolist.viewbuilder.js";
 var list = new TodoList();
-document.body.append(new TodoListView(list).getToDoListView())
+document.body.append(new TodoListViewBuilder(list).withInputField().build())
