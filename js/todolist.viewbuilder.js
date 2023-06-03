@@ -4,19 +4,21 @@ import { TodoListDomBuilder } from './todolist.dombuilder.js'
 
 export class TodoListViewBuilder {
     static inputTagName = "input"
+    #todoList
+    #hasInputField
 
     constructor(todoList) {
-        this.todoList = todoList
+        this.#todoList = todoList
     }
 
     withInputField() {
-        this.hasInputField = true
+        this.#hasInputField = true
         return this
     }
 
     build() {
         let htmlElement = document.createElement("div")
-        if (this.hasInputField) {
+        if (this.#hasInputField) {
             this.#addInputField(htmlElement)
         }
         this.#renderNewToDoList(htmlElement)
@@ -56,7 +58,7 @@ export class TodoListViewBuilder {
     }
 
     #addTodoList(todoListItemDisplayedText, htmlElementToBeManipulated) {
-        this.todoList.add(todoListItemDisplayedText)
+        this.#todoList.add(todoListItemDisplayedText)
         this.#reRenderToDoList(htmlElementToBeManipulated)
     }
 
@@ -76,7 +78,7 @@ export class TodoListViewBuilder {
             .withListCssClass("ordered-todo-list")
             .withListItemsCssClass("ordered-todo-list--items")
             .withDeleteButtons()
-            .build(this.todoList.getAll())
+            .build(this.#todoList.getAll())
     }
 
     #addDeleteButtons(todoOrderedList, htmlElementToBeManipulated) {
@@ -93,7 +95,7 @@ export class TodoListViewBuilder {
     }
 
     #deleteTodoListItem(todoListItemId, htmlElementToBeManipulated) {
-        this.todoList.removeById(todoListItemId)
+        this.#todoList.removeById(todoListItemId)
         this.#reRenderToDoList(htmlElementToBeManipulated)
     }
 }

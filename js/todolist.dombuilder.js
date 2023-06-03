@@ -8,7 +8,10 @@ export class TodoListDomBuilder {
     static deleteButtonName = "Delete"
     static deleteButtonTextContent = TodoListDomBuilder.deleteButtonName
     static #deleteButtonNameQuerySelector = "[name='" + TodoListDomBuilder.deleteButtonName + "']"
-
+    #listCssClass
+    #listItemCssClass
+    #hasDeleteButtons
+    
     build(todoListItems) {
         let list = this.#getNewOrderedList();
         for (const item of todoListItems) {
@@ -19,17 +22,17 @@ export class TodoListDomBuilder {
     }
 
     withListCssClass(cssClass) {
-        this.listCssClass = cssClass
+        this.#listCssClass = cssClass
         return this
     }
 
     withListItemsCssClass(cssClass) {
-        this.listItemCssClass = cssClass
+        this.#listItemCssClass = cssClass
         return this
     }
 
     withDeleteButtons() {
-        this.hasDeleteButtons = true
+        this.#hasDeleteButtons = true
         return this
     }
 
@@ -39,16 +42,16 @@ export class TodoListDomBuilder {
 
     #getNewOrderedList() {
         let list = document.createElement(TodoListDomBuilder.orderedListTagName);
-        list.className = this.listCssClass;
+        list.className = this.#listCssClass;
         return list;
     }
 
     #getNewListItem(item) {
         let listItem = document.createElement(TodoListDomBuilder.listItemTagName);
         listItem.innerText = item.value.displayedText;
-        listItem.className = this.listItemCssClass;
+        listItem.className = this.#listItemCssClass;
 
-        if (this.hasDeleteButtons) {
+        if (this.#hasDeleteButtons) {
             listItem.append(this.#getNewDeleteButtonForToDoListItem(item.id))
         }
 

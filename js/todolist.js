@@ -19,27 +19,32 @@ class ListItem {
 }
 
 class LinkedList {
+    #nodeIdToNode
+    #currentId
+    #tail
+    #head
+    
     constructor() {
-        this.nodeIdToNode = []
-        this.currentId = IdStartingValue
+        this.#nodeIdToNode = []
+        this.#currentId = IdStartingValue
     }
 
     append(todoItemValue) {
         let node = this.#createNodeWithValue(todoItemValue);
 
-        if (!this.head) {
-            this.head = node;
+        if (!this.#head) {
+            this.#head = node;
             return
         }
 
         this.#appendNodeToEndOfList(node);
-        this.tail = node;
+        this.#tail = node;
     }
 
     toArray() {
         let todoItems = []
 
-        if (this.head) {
+        if (this.#head) {
             this.#fillArrayWithAllNodes(todoItems);
         }
 
@@ -49,7 +54,7 @@ class LinkedList {
     getTopNodeAsArray(count) {
         let todoItems = []
 
-        if (count > 0 && this.head) {
+        if (count > 0 && this.#head) {
             this.#fillArrayWithTopNNodes(todoItems, count);
 
         }
@@ -58,22 +63,22 @@ class LinkedList {
     }
 
     removeNode(id) {
-        if (!this.nodeIdToNode[id]) {
+        if (!this.#nodeIdToNode[id]) {
             return;
         }
 
-        let node = this.nodeIdToNode[id]
+        let node = this.#nodeIdToNode[id]
 
         if (!node) {
             return
         }
 
-        if (node == this.head) {
+        if (node == this.#head) {
             this.#removeHead();
             return
         }
 
-        if (node == this.tail) {
+        if (node == this.#tail) {
             this.#removeTail();
             return
         }
@@ -84,33 +89,33 @@ class LinkedList {
     }
 
     setIsCompleted(id, isCompleted) {
-        if (this.nodeIdToNode[id]) {
-            this.nodeIdToNode[id].value.isCompleted = isCompleted
+        if (this.#nodeIdToNode[id]) {
+            this.#nodeIdToNode[id].value.isCompleted = isCompleted
         }
     }
 
     #createNodeWithValue(todoItemValue) {
-        let node = new ListItem(this.currentId++);
-        this.nodeIdToNode[node.id] = node
+        let node = new ListItem(this.#currentId++);
+        this.#nodeIdToNode[node.id] = node
         node.value = todoItemValue;
         return node;
     }
 
     #appendNodeToEndOfList(node) {
-        if (this.tail) {
-            this.tail.next = node;
-            node.prev = this.tail;
+        if (this.#tail) {
+            this.#tail.next = node;
+            node.prev = this.#tail;
         }
 
         else {
-            this.head.next = node;
-            node.prev = this.head;
+            this.#head.next = node;
+            node.prev = this.#head;
         }
     }
 
     #fillArrayWithAllNodes(array) {
-        array.push(this.head);
-        let next = this.head.next;
+        array.push(this.#head);
+        let next = this.#head.next;
         while (next) {
             array.push(next);
             next = next.next;
@@ -118,9 +123,9 @@ class LinkedList {
     }
 
     #fillArrayWithTopNNodes(array, n) {
-        array.push(this.head)
+        array.push(this.#head)
         let remain = n - 1
-        let next = this.head.next
+        let next = this.#head.next
         while (remain-- > 0 && next) {
             array.push(next)
             next = next.next;
@@ -128,16 +133,16 @@ class LinkedList {
     }
 
     #removeTail() {
-        this.tail = this.tail.prev;
-        this.tail.next = undefined;
+        this.#tail = this.#tail.prev;
+        this.#tail.next = undefined;
     }
 
     #removeHead() {
-        if (!this.head.next) {
-            this.head = undefined;
+        if (!this.#head.next) {
+            this.#head = undefined;
         }
         else {
-            this.head = this.head.next;
+            this.#head = this.#head.next;
         }
     }
 
@@ -148,27 +153,29 @@ class LinkedList {
 }
 
 export class TodoList {
+    #todoList
+
     constructor() {
-        this.todoList = new LinkedList()
+        this.#todoList = new LinkedList()
     }
 
     add(itemDisplayedText) {
-        this.todoList.append(new ItemValue(itemDisplayedText))
+        this.#todoList.append(new ItemValue(itemDisplayedText))
     }
 
     getAll() {
-        return this.todoList.toArray()
+        return this.#todoList.toArray()
     }
 
     getTop(count) {
-        return this.todoList.getTopNodeAsArray(count)
+        return this.#todoList.getTopNodeAsArray(count)
     }
 
     removeById(id) {
-        this.todoList.removeNode(id)
+        this.#todoList.removeNode(id)
     }
 
     completeTask(id) {
-        this.todoList.setIsCompleted(id, true)
+        this.#todoList.setIsCompleted(id, true)
     }
 }
