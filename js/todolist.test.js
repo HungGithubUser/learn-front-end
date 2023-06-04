@@ -24,7 +24,7 @@ describe('should return correct set to do item in list', () => {
     todoList.add(secondTodoItem);
     todoList.add(thirdTodoItem);
     expect(getAllToDoListDisplayedText()).toStrictEqual([firstTodoItem, secondTodoItem, thirdTodoItem]);
-    expect(getAllToDoListIsCompletedStatus()).toStrictEqual([false,false,false])
+    expect(getAllToDoListIsCompletedStatus()).toStrictEqual([false, false, false])
   });
 })
 
@@ -94,6 +94,16 @@ test('should have one to do list when remove two same to do list', () => {
   expect(getAllToDoListDisplayedText()).toStrictEqual([learnCsharp])
 })
 
+test('should add todolist back successfully when removing all todoList', () => {
+  todoList.add(learnJava);
+  todoList.add(learnCsharp);
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnJava));
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp));
+  todoList.add(learnJava);
+  todoList.add(learnCsharp);
+  expect(getAllToDoListDisplayedText()).toStrictEqual([learnJava, learnCsharp])
+})
+
 test('should return 1 item for get top when there is 1 item in list', () => {
   todoList.add(learnCsharp)
   const actual = todoList.getTop(10)
@@ -133,11 +143,10 @@ test('should complete task successfully', () => {
   expect(getAllToDoListIsCompletedStatus()).toStrictEqual([true])
 })
 
-test('should complete empty taskF successfully', () => {
+test('should complete empty task successfully', () => {
   todoList.add(learnCsharp)
   todoList.completeTask(-1)
 })
-
 
 function getAllToDoListDisplayedText() {
   return toDisplayedTextArray(todoList.getAll())

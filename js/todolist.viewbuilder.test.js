@@ -17,28 +17,7 @@ beforeEach(() => {
 })
 
 test('should add todolist items successfully when input is entered', () => {
-
-    expect(getFirstChild(actual)).toBeTruthy();
-    expect(getFirstChild(actual).tagName.toUpperCase()).toEqual(INPUT_TAG_NAME.toUpperCase())
-
-    let actualInputField = getFirstChild(actual)
-    addToDoListItem(actualInputField, learnJavaScript);
-
-    assertFirstTodoListViewIsCorrect();
-    expect(actualInputField.value).toBe("");
-
-    addToDoListItem(actualInputField, learnPython);
-
-    assertFirstTodoListViewIsCorrect();
-    assertSecondTodoListViewIsCorrect();
-    expect(actualInputField.value).toBe("");
-
-    actualInputField.value = learnJava
-    actualInputField.dispatchEvent(new KeyboardEvent('keyup', { 'key': 'a' }));
-    assertFirstTodoListViewIsCorrect();
-    assertSecondTodoListViewIsCorrect();
-    expect(todoList.getAll().length).toEqual(2)
-    expect(actualInputField.value).toBe(learnJava);
+    shouldAddTotoListItemsSuccessfullyWhenInputIsEntered();
 })
 
 test('should remove first todolist successfully a few times when remove button is clicked', () => {
@@ -47,12 +26,14 @@ test('should remove first todolist successfully a few times when remove button i
     shouldRemoveFirstTodoListSuccessfullyWhenRemoveButtonIsClicked(learnPython);
 })
 
-test('should remove second todolist successfully when remove button is clicked', () => {
+test('should remove second todolist successfully when remove button is clicked then add function will work normally', () => {
     let actualInputField = getFirstChild(actual)
     addToDoListItem(actualInputField, learnJavaScript);
     shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualInputField, learnJava);
     shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualInputField, learnJavaScript);
     shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualInputField, learnPython);
+    getFirstTodoListItemDeleteButton().click();
+    shouldAddTotoListItemsSuccessfullyWhenInputIsEntered()
 })
 
 test('should not exists input field when built without input field', () => {
@@ -71,6 +52,30 @@ test('should complete todolist item successfully when complete button is clicked
     expect(getFirstTodoListItem().value.isCompleted).toBe(true);
     expect(getFirstTodoListItemCompleteButton()).toBeFalsy();
 })
+
+function shouldAddTotoListItemsSuccessfullyWhenInputIsEntered() {
+    expect(getFirstChild(actual)).toBeTruthy();
+    expect(getFirstChild(actual).tagName.toUpperCase()).toEqual(INPUT_TAG_NAME.toUpperCase());
+
+    let actualInputField = getFirstChild(actual);
+    addToDoListItem(actualInputField, learnJavaScript);
+
+    assertFirstTodoListViewIsCorrect();
+    expect(actualInputField.value).toBe("");
+
+    addToDoListItem(actualInputField, learnPython);
+
+    assertFirstTodoListViewIsCorrect();
+    assertSecondTodoListViewIsCorrect();
+    expect(actualInputField.value).toBe("");
+
+    actualInputField.value = learnJava;
+    actualInputField.dispatchEvent(new KeyboardEvent('keyup', { 'key': 'a' }));
+    assertFirstTodoListViewIsCorrect();
+    assertSecondTodoListViewIsCorrect();
+    expect(todoList.getAll().length).toEqual(2);
+    expect(actualInputField.value).toBe(learnJava);
+}
 
 function addToDoListItem(actualInputField, valueToBeAdded) {
     actualInputField.value = valueToBeAdded;

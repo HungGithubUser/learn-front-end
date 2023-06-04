@@ -23,7 +23,7 @@ class LinkedList {
     #currentId
     #tail
     #head
-    
+
     constructor() {
         this.#nodeIdToNode = []
         this.#currentId = IdStartingValue
@@ -69,7 +69,9 @@ class LinkedList {
 
         let node = this.#nodeIdToNode[id]
 
-        if (!node) {
+        if (node == this.#head && node == this.#tail) {
+            this.#removeHead();
+            this.#removeTail()
             return
         }
 
@@ -134,7 +136,9 @@ class LinkedList {
 
     #removeTail() {
         this.#tail = this.#tail.prev;
-        this.#tail.next = undefined;
+        if (this.#tail) {
+            this.#tail.next = undefined;
+        }
     }
 
     #removeHead() {
@@ -142,7 +146,11 @@ class LinkedList {
             this.#head = undefined;
         }
         else {
+            let curHead = this.#head;
             this.#head = this.#head.next;
+            if (curHead == this.#tail.prev) {
+                this.#tail.prev = undefined
+            }
         }
     }
 
