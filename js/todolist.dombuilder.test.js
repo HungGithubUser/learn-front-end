@@ -58,32 +58,31 @@ test('should return 1 list item from getAll with complete button', () => {
     expect(getFirstListItemButtons(actual)[0].textContent).toEqual(TodoListDomBuilder.completeButtonTextContent)
 })
 
+test('should not have complete button when task is completed', () => {
+    setUpActualWithOneCompletedTask();
+    let actual = sut.withCompleteButtons().build(todoList.getAll());
+    expect(getFirstListItemButtons(actual).length).toEqual(0)
+})
+
+test.each(["ordered-todo-list--item-completed", "ordered-todo-list--item-1-completed", "ordered-todo-list--item-2-completed", "ordered-todo-list--item-1-completed ordered-todo-list--item-2-completed"])
+    ('completed tasks should have configured css class: %p', (expectedListItemCssClass) => {
+        setUpActualWithOneCompletedTask();
+        let actual = sut.withCompletedListItemsCssClass(expectedListItemCssClass).build(todoList.getAll())
+        expect(getFirstListItem(actual).className).toEqual(expectedListItemCssClass)
+    })
+
 test('should return all correct delete button elements', () => {
     todoList.add(learnJavaScript);
     todoList.add(learnPython);
     let actual = TodoListDomBuilder.getAllDeleteButtons(sut.withDeleteButtons().build(todoList.getAll()))
-
-    expect(actual.length).toEqual(2)
-    expect(Number(actual[0].value)).toEqual(todoList.getTop(1)[0].id)
-    expect(actual[0].name).toEqual(TodoListDomBuilder.deleteButtonName)
-    expect(actual[0].textContent).toEqual(TodoListDomBuilder.deleteButtonTextContent)
-    expect(Number(actual[1].value)).toEqual(todoList.getTop(2)[1].id)
-    expect(actual[1].name).toEqual(TodoListDomBuilder.deleteButtonName)
-    expect(actual[1].textContent).toEqual(TodoListDomBuilder.deleteButtonTextContent)
+    AssertActualHasCorrectButtonsInList(actual, TodoListDomBuilder.deleteButtonName, TodoListDomBuilder.deleteButtonTextContent);
 })
 
 test('should return all correct complete button elements', () => {
     todoList.add(learnJavaScript);
     todoList.add(learnPython);
     let actual = TodoListDomBuilder.getAllCompleteButtons(sut.withCompleteButtons().build(todoList.getAll()))
-
-    expect(actual.length).toEqual(2)
-    expect(Number(actual[0].value)).toEqual(todoList.getTop(1)[0].id)
-    expect(actual[0].name).toEqual(TodoListDomBuilder.completeButtonName)
-    expect(actual[0].textContent).toEqual(TodoListDomBuilder.completeButtonTextContent)
-    expect(Number(actual[1].value)).toEqual(todoList.getTop(2)[1].id)
-    expect(actual[1].name).toEqual(TodoListDomBuilder.completeButtonName)
-    expect(actual[1].textContent).toEqual(TodoListDomBuilder.completeButtonTextContent)
+    AssertActualHasCorrectButtonsInList(actual, TodoListDomBuilder.completeButtonName, TodoListDomBuilder.completeButtonTextContent);
 })
 
 test('should return empty button elements', () => {
@@ -118,4 +117,19 @@ function getFirstListItemButtons(actual) {
 function shouldHaveACorrectStandardButton(actual) {
     expect(getFirstListItemButtons(actual).length).toEqual(1);
     expect(Number(getFirstListItemButtons(actual)[0].value)).toEqual(todoList.getTop(1)[0].id);
+}
+
+function AssertActualHasCorrectButtonsInList(actual, buttonName, buttonTextContent) {
+    expect(actual.length).toEqual(2);
+    expect(Number(actual[0].value)).toEqual(todoList.getTop(1)[0].id);
+    expect(actual[0].name).toEqual(buttonName);
+    expect(actual[0].textContent).toEqual(buttonTextContent);
+    expect(Number(actual[1].value)).toEqual(todoList.getTop(2)[1].id);
+    expect(actual[1].name).toEqual(buttonName);
+    expect(actual[1].textContent).toEqual(buttonTextContent);
+}
+
+function setUpActualWithOneCompletedTask() {
+    todoList.add(learnJavaScript);
+    todoList.completeTask(todoList.getTop(1)[0].id);
 }

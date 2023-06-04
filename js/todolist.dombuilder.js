@@ -12,6 +12,7 @@ export class TodoListDomBuilder {
     #listItemCssClass
     #hasDeleteButtons
     #hasCompleteButton
+    #completedListItemCssClass
 
     build(todoListItems) {
         let list = this.#getNewOrderedList();
@@ -29,6 +30,11 @@ export class TodoListDomBuilder {
 
     withListItemsCssClass(cssClass) {
         this.#listItemCssClass = cssClass
+        return this
+    }
+
+    withCompletedListItemsCssClass(cssClass) {
+        this.#completedListItemCssClass = cssClass
         return this
     }
 
@@ -59,13 +65,14 @@ export class TodoListDomBuilder {
     #getNewListItem(item) {
         let listItem = document.createElement(LIST_ITEM_TAG_NAME);
         listItem.innerText = item.value.displayedText;
-        listItem.className = this.#listItemCssClass;
+
+        this.#setListItemCssClasses(listItem, item.value.isCompleted);
 
         if (this.#hasDeleteButtons) {
             listItem.append(this.#getNewDeleteButtonForToDoListItem(item.id))
         }
 
-        if (this.#hasCompleteButton) {
+        if (this.#hasCompleteButton && item.value.isCompleted === false) {
             listItem.append(this.#getNewCompleteButtonForToDoListItem(item.id))
         }
 
@@ -91,5 +98,19 @@ export class TodoListDomBuilder {
         button.value = itemId;
         button.setAttribute("type", "button");
         return button;
+    }
+
+    #setListItemCssClasses(listItem, todoListItemIsCompleted) {
+        const shouldAddCompletedListItemCssClass = todoListItemIsCompleted && this.#completedListItemCssClass;
+
+        if (!this.#listItemCssClass && shouldAddCompletedListItemCssClass) {
+            listItem.className = this.#completedListItemCssClass;
+            return
+        }
+
+        listItem.className = this.#listItemCssClass;
+        if (shouldAddCompletedListItemCssClass) {
+            listItem.className += " " + this.#completedListItemCssClass;
+        }
     }
 }
