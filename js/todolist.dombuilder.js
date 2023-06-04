@@ -1,6 +1,6 @@
 'use strict';
 
-import { ORDERED_LIST_TAG_NAME, LIST_ITEM_TAG_NAME, BUTTON_TAG_NAME } from "./constants.dom";
+import { ORDERED_LIST_TAG_NAME, LIST_ITEM_TAG_NAME, BUTTON_TAG_NAME } from "./constants.dom.js";
 
 export class TodoListDomBuilder {
     static deleteButtonName = "Delete"
