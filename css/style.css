@@ -5,6 +5,10 @@
     margin: auto;
 }
 
-li.ordered-todo-list--items:nth-child(odd){
+li.ordered-todo-list--items:nth-child(odd) {
     background-color: aliceblue;
+}
+
+li.ordered-todo-list--items-completed {
+    text-decoration: line-through;
 }

@@ -63,6 +63,15 @@ test('should not exists input field when built without input field', () => {
     .toEqual(ORDERED_LIST_TAG_NAME.toUpperCase())
 })
 
+test('should complete todolist item successfully when complete button is clicked button is clicked', () => {
+    addToDoListItem(getFirstChild(actual), learnJava);
+    expect(getFirstTodoListItemCompleteButton()).toBeTruthy();
+
+    getFirstTodoListItemCompleteButton().click();
+    expect(getFirstTodoListItem().value.isCompleted).toBe(true);
+    expect(getFirstTodoListItemCompleteButton()).toBeFalsy();
+})
+
 function addToDoListItem(actualInputField, valueToBeAdded) {
     actualInputField.value = valueToBeAdded;
     dispatchEnterEvent(actualInputField);
@@ -130,6 +139,10 @@ function shouldRemoveSecondTodoListSuccessfullyWhenRemoveButtonIsClicked(actualI
 
 function getFirstTodoListItemDeleteButton() {
     return TodoListDomBuilder.getAllDeleteButtons(getSecondChild(actual))[0];
+}
+
+function getFirstTodoListItemCompleteButton() {
+    return TodoListDomBuilder.getAllCompleteButtons(getSecondChild(actual))[0];
 }
 
 function getSecondTodoListItemDeleteButton() {

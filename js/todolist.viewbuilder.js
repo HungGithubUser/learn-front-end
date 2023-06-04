@@ -33,7 +33,8 @@ export class TodoListViewBuilder {
 
     #renderNewToDoList(htmlElementToBeManipulated) {
         let todoOrderedList = this.#getNewTodoListOrderedListHtmlElement()
-        this.#addDeleteButtons(todoOrderedList, htmlElementToBeManipulated)
+        this.#addDeleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated)
+        this.#addCompleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated)
         htmlElementToBeManipulated.appendChild(todoOrderedList)
     }
 
@@ -77,25 +78,48 @@ export class TodoListViewBuilder {
         return new TodoListDomBuilder()
             .withListCssClass("ordered-todo-list")
             .withListItemsCssClass("ordered-todo-list--items")
+            .withCompletedListItemsCssClass("ordered-todo-list--items-completed")
             .withDeleteButtons()
+            .withCompleteButtons()
             .build(this.#todoList.getAll())
     }
 
-    #addDeleteButtons(todoOrderedList, htmlElementToBeManipulated) {
+    #addDeleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated) {
         let deleteButtons = TodoListDomBuilder.getAllDeleteButtons(todoOrderedList)
-        this.#wireUpDeleteButtonsClickEvents(deleteButtons, htmlElementToBeManipulated)
+        const eventParameters = {
+            buttons: deleteButtons,
+            htmlElement: htmlElementToBeManipulated,
+            todoList: this.#todoList,
+            callBackFunction: this.#deleteTodoListItem
+        }
+        this.#wireUpListItemButtonsClickEvents(eventParameters)
     }
 
-    #wireUpDeleteButtonsClickEvents(deleteButtons, htmlElementToBeManipulated) {
-        for (let button of deleteButtons) {
+    #addCompleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated) {
+        let completeButtons = TodoListDomBuilder.getAllCompleteButtons(todoOrderedList)
+        const eventParameters = {
+            buttons: completeButtons,
+            htmlElement: htmlElementToBeManipulated,
+            todoList: this.#todoList,
+            callBackFunction: this.#completeTodoListItem
+        }
+        this.#wireUpListItemButtonsClickEvents(eventParameters)
+    }
+
+    #wireUpListItemButtonsClickEvents(eventParameters) {
+        for (let button of eventParameters.buttons) {
             button.addEventListener("click", (e) => {
-                this.#deleteTodoListItem(Number(e.target.value), htmlElementToBeManipulated)
+                eventParameters.callBackFunction(Number(e.target.value), eventParameters.todoList)
+                this.#reRenderToDoList(eventParameters.htmlElement)
             })
         }
     }
 
-    #deleteTodoListItem(todoListItemId, htmlElementToBeManipulated) {
-        this.#todoList.removeById(todoListItemId)
-        this.#reRenderToDoList(htmlElementToBeManipulated)
+    #deleteTodoListItem(todoListItemId, todoList) {
+        todoList.removeById(todoListItemId)
+    }
+
+    #completeTodoListItem(todoListItemId, todoList) {
+        todoList.completeTask(todoListItemId)
     }
 }
