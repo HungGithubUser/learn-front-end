@@ -5,10 +5,13 @@ import { ORDERED_LIST_TAG_NAME, LIST_ITEM_TAG_NAME, BUTTON_TAG_NAME } from "./co
 export class TodoListDomBuilder {
     static deleteButtonName = "Delete"
     static deleteButtonTextContent = TodoListDomBuilder.deleteButtonName
-    static #deleteButtonNameQuerySelector = "[name='" + TodoListDomBuilder.deleteButtonName + "']"
+    static #getButtonQuerySelector(buttonName) { return "[name='" + buttonName + "']" }
+    static completeButtonName = "Complete"
+    static completeButtonTextContent = TodoListDomBuilder.completeButtonName
     #listCssClass
     #listItemCssClass
     #hasDeleteButtons
+    #hasCompleteButton
 
     build(todoListItems) {
         let list = this.#getNewOrderedList();
@@ -34,8 +37,17 @@ export class TodoListDomBuilder {
         return this
     }
 
+    withCompleteButtons() {
+        this.#hasCompleteButton = true
+        return this
+    }
+
     static getAllDeleteButtons(orderedList) {
-        return orderedList.querySelectorAll(this.#deleteButtonNameQuerySelector)
+        return orderedList.querySelectorAll(this.#getButtonQuerySelector(this.deleteButtonName))
+    }
+
+    static getAllCompleteButtons(orderedList) {
+        return orderedList.querySelectorAll(this.#getButtonQuerySelector(this.completeButtonName))
     }
 
     #getNewOrderedList() {
@@ -53,15 +65,31 @@ export class TodoListDomBuilder {
             listItem.append(this.#getNewDeleteButtonForToDoListItem(item.id))
         }
 
+        if (this.#hasCompleteButton) {
+            listItem.append(this.#getNewCompleteButtonForToDoListItem(item.id))
+        }
+
         return listItem;
     }
 
     #getNewDeleteButtonForToDoListItem(itemId) {
-        let button = document.createElement(BUTTON_TAG_NAME);
-        button.value = itemId;
+        let button = this.#getNewStandardButton(itemId)
         button.name = TodoListDomBuilder.deleteButtonName;
         button.textContent = TodoListDomBuilder.deleteButtonTextContent;
-        button.setAttribute("type", "button")
+        return button;
+    }
+
+    #getNewCompleteButtonForToDoListItem(itemId) {
+        let button = this.#getNewStandardButton(itemId);
+        button.name = TodoListDomBuilder.completeButtonName;
+        button.textContent = TodoListDomBuilder.completeButtonTextContent;
+        return button;
+    }
+
+    #getNewStandardButton(itemId) {
+        let button = document.createElement(BUTTON_TAG_NAME);
+        button.value = itemId;
+        button.setAttribute("type", "button");
         return button;
     }
 }

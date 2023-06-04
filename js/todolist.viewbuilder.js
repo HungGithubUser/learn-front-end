@@ -1,6 +1,6 @@
 'use strict'
 
-import { INPUT_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom.js'
+import { DIV_TAG_NAME, INPUT_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom.js'
 import { TodoListDomBuilder } from './todolist.dombuilder.js'
 
 export class TodoListViewBuilder {
@@ -17,7 +17,7 @@ export class TodoListViewBuilder {
     }
 
     build() {
-        let htmlElement = document.createElement("div")
+        let htmlElement = document.createElement(DIV_TAG_NAME)
         if (this.#hasInputField) {
             this.#addInputField(htmlElement)
         }
