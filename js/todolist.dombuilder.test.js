@@ -1,5 +1,6 @@
 'use strict';
 
+import { BUTTON_TAG_NAME, LIST_ITEM_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom';
 import { TodoList } from './todolist';
 import { TodoListDomBuilder } from './todolist.dombuilder'
 
@@ -23,7 +24,7 @@ test('should return 2 list items from getAll', () => {
     todoList.add(learnPython)
     let actual = sut.build(todoList.getAll())
     expect(actual.childElementCount).toEqual(2);
-    expect(getSecondListItem(actual).tagName.toUpperCase()).toEqual(TodoListDomBuilder.listItemTagName.toUpperCase());
+    expect(getSecondListItem(actual).tagName.toUpperCase()).toEqual(LIST_ITEM_TAG_NAME.toUpperCase());
     expect(getSecondListItem(actual).innerText).toEqual(learnPython);
 })
 
@@ -73,9 +74,9 @@ test('should return empty delete button elements', () => {
 function shouldReturnOneListItemFromGetAll() {
     todoList.add(learnJavaScript);
     let actual = sut.build(todoList.getAll());
-    expect(actual.tagName.toUpperCase()).toEqual(TodoListDomBuilder.orderedListTagName.toUpperCase());
+    expect(actual.tagName.toUpperCase()).toEqual(ORDERED_LIST_TAG_NAME.toUpperCase());
     expect(actual.childElementCount).toEqual(1);
-    expect(getFirstListItem(actual).tagName.toUpperCase()).toEqual(TodoListDomBuilder.listItemTagName.toUpperCase());
+    expect(getFirstListItem(actual).tagName.toUpperCase()).toEqual(LIST_ITEM_TAG_NAME.toUpperCase());
     expect(getFirstListItem(actual).innerText).toEqual(learnJavaScript);
 }
 
@@ -88,5 +89,5 @@ function getSecondListItem(actual) {
 }
 
 function getFirstListItemButtons(actual) {
-    return getFirstListItem(actual).getElementsByTagName(TodoListDomBuilder.buttonTagName);
+    return getFirstListItem(actual).getElementsByTagName(BUTTON_TAG_NAME);
 }

@@ -1,17 +1,15 @@
 'use strict';
 
-export class TodoListDomBuilder {
+import { ORDERED_LIST_TAG_NAME, LIST_ITEM_TAG_NAME, BUTTON_TAG_NAME } from "./constants.dom";
 
-    static orderedListTagName = "ol"
-    static listItemTagName = "li"
-    static buttonTagName = "button"
+export class TodoListDomBuilder {
     static deleteButtonName = "Delete"
     static deleteButtonTextContent = TodoListDomBuilder.deleteButtonName
     static #deleteButtonNameQuerySelector = "[name='" + TodoListDomBuilder.deleteButtonName + "']"
     #listCssClass
     #listItemCssClass
     #hasDeleteButtons
-    
+
     build(todoListItems) {
         let list = this.#getNewOrderedList();
         for (const item of todoListItems) {
@@ -41,13 +39,13 @@ export class TodoListDomBuilder {
     }
 
     #getNewOrderedList() {
-        let list = document.createElement(TodoListDomBuilder.orderedListTagName);
+        let list = document.createElement(ORDERED_LIST_TAG_NAME);
         list.className = this.#listCssClass;
         return list;
     }
 
     #getNewListItem(item) {
-        let listItem = document.createElement(TodoListDomBuilder.listItemTagName);
+        let listItem = document.createElement(LIST_ITEM_TAG_NAME);
         listItem.innerText = item.value.displayedText;
         listItem.className = this.#listItemCssClass;
 
@@ -59,7 +57,7 @@ export class TodoListDomBuilder {
     }
 
     #getNewDeleteButtonForToDoListItem(itemId) {
-        let button = document.createElement(TodoListDomBuilder.buttonTagName);
+        let button = document.createElement(BUTTON_TAG_NAME);
         button.value = itemId;
         button.name = TodoListDomBuilder.deleteButtonName;
         button.textContent = TodoListDomBuilder.deleteButtonTextContent;

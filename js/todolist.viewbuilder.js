@@ -1,9 +1,9 @@
 'use strict'
 
+import { INPUT_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom.js'
 import { TodoListDomBuilder } from './todolist.dombuilder.js'
 
 export class TodoListViewBuilder {
-    static inputTagName = "input"
     #todoList
     #hasInputField
 
@@ -38,7 +38,7 @@ export class TodoListViewBuilder {
     }
 
     #getInputElementForAddingTodoList() {
-        let input = document.createElement(TodoListViewBuilder.inputTagName)
+        let input = document.createElement(INPUT_TAG_NAME)
         input.setAttribute("aria-label", "add to do list")
         input.setAttribute("placeholder", "Add to do list")
         return input
@@ -68,7 +68,7 @@ export class TodoListViewBuilder {
     }
 
     #cleanUpOldToDoListIfExists(elementToBeManipulated) {
-        for (let orderedList of elementToBeManipulated.getElementsByTagName(TodoListDomBuilder.orderedListTagName)) {
+        for (let orderedList of elementToBeManipulated.getElementsByTagName(ORDERED_LIST_TAG_NAME)) {
             orderedList.remove()
         }
     }

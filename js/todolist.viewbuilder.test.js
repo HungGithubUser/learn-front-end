@@ -3,6 +3,7 @@
 import { TodoListViewBuilder } from './todolist.viewbuilder'
 import { TodoListDomBuilder } from './todolist.dombuilder'
 import { TodoList } from './todolist'
+import { INPUT_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom';
 
 var actual
 var todoList
@@ -18,7 +19,7 @@ beforeEach(() => {
 test('should add todolist items successfully when input is entered', () => {
 
     expect(getFirstChild(actual)).toBeTruthy();
-    expect(getFirstChild(actual).tagName.toUpperCase()).toEqual(TodoListViewBuilder.inputTagName.toUpperCase())
+    expect(getFirstChild(actual).tagName.toUpperCase()).toEqual(INPUT_TAG_NAME.toUpperCase())
 
     let actualInputField = getFirstChild(actual)
     addToDoListItem(actualInputField, learnJavaScript);
@@ -59,7 +60,7 @@ test('should not exists input field when built without input field', () => {
 
     expect(getFirstChild(actualWithoutInput)).toBeTruthy();
     expect(getFirstChild(actualWithoutInput).tagName.toUpperCase())
-    .toEqual(TodoListDomBuilder.orderedListTagName.toUpperCase())
+    .toEqual(ORDERED_LIST_TAG_NAME.toUpperCase())
 })
 
 function addToDoListItem(actualInputField, valueToBeAdded) {
