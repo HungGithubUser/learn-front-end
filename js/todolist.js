@@ -96,6 +96,12 @@ class LinkedList {
         }
     }
 
+    toggleIsCompleted(id) {
+        if (this.#nodeIdToNode[id]) {
+            this.#nodeIdToNode[id].value.isCompleted = !this.#nodeIdToNode[id].value.isCompleted
+        }
+    }
+
     #createNodeWithValue(todoItemValue) {
         let node = new ListItem(this.#currentId++);
         this.#nodeIdToNode[node.id] = node
@@ -185,5 +191,13 @@ export class TodoList {
 
     completeTask(id) {
         this.#todoList.setIsCompleted(id, true)
+    }
+
+    incompleteTask(id) {
+        this.#todoList.setIsCompleted(id, false)
+    }
+    
+    toggleCompleteTask(id) {
+        this.#todoList.toggleIsCompleted(id)
     }
 }

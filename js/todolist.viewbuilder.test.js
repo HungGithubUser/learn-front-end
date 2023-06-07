@@ -13,7 +13,7 @@ const learnJava = "learn Java"
 beforeEach(() => {
     todoList = new TodoList()
     let sut = new TodoListViewBuilder(todoList)
-    actual = sut.withInputField().build()
+    actual = sut.withInputField().withCompleteTaskButtons().build()
 })
 
 test('should add todolist items successfully when input is entered', () => {
@@ -41,16 +41,48 @@ test('should not exists input field when built without input field', () => {
 
     expect(getFirstChild(actualWithoutInput)).toBeTruthy();
     expect(getFirstChild(actualWithoutInput).tagName.toUpperCase())
-    .toEqual(ORDERED_LIST_TAG_NAME.toUpperCase())
+        .toEqual(ORDERED_LIST_TAG_NAME.toUpperCase())
 })
 
-test('should complete todolist item successfully when complete button is clicked button is clicked', () => {
+test('should complete todolist item successfully when complete button is clicked', () => {
     addToDoListItem(getFirstChild(actual), learnJava);
-    expect(getFirstTodoListItemCompleteButton()).toBeTruthy();
+    expect(getFirstTodoListItemCompleteButton(actual)).toBeTruthy();
 
-    getFirstTodoListItemCompleteButton().click();
+    getFirstTodoListItemCompleteButton(actual).click();
     expect(getFirstTodoListItem().value.isCompleted).toBe(true);
-    expect(getFirstTodoListItemCompleteButton()).toBeFalsy();
+    expect(getFirstTodoListItemCompleteButton(actual)).toBeFalsy();
+})
+
+test('should toggle todolist item successfully when list item is clicked', () => {
+    let actualWithCompleteTaskOnItemClick = new TodoListViewBuilder(todoList)
+        .withInputField()
+        .withCompleteTaskToggleOnItemClick()
+        .build()
+
+    addToDoListItem(getFirstChild(actualWithCompleteTaskOnItemClick), learnJava);
+    expect(getFirstTodoListDomItemFromDomItem(actualWithCompleteTaskOnItemClick)).toBeTruthy();
+
+    getFirstTodoListDomItemFromDomItem(actualWithCompleteTaskOnItemClick).click();
+    expect(getFirstTodoListItem().value.isCompleted).toBe(true);
+    getFirstTodoListDomItemFromDomItem(actualWithCompleteTaskOnItemClick).click();
+    expect(getFirstTodoListItem().value.isCompleted).toBe(false);
+})
+
+test('should not toggle todolist when list item is clicked', () => {
+    addToDoListItem(getFirstChild(actual), learnJava);
+    expect(getFirstTodoListDomItemFromDomItem(actual)).toBeTruthy();
+
+    getFirstTodoListDomItemFromDomItem(actual).click();
+    expect(getFirstTodoListItem().value.isCompleted).toBe(false);
+    getFirstTodoListDomItemFromDomItem(actual).click();
+    expect(getFirstTodoListItem().value.isCompleted).toBe(false);
+})
+
+test('should not exists complete buttons when built without complete buttons', () => {
+    let actualWithoutCompleteButton = new TodoListViewBuilder(todoList).withInputField().build()
+
+    addToDoListItem(getFirstChild(actualWithoutCompleteButton), learnJava);
+    expect(getFirstTodoListItemCompleteButton(actualWithoutCompleteButton)).toBeFalsy();
 })
 
 function shouldAddTotoListItemsSuccessfullyWhenInputIsEntered() {
@@ -117,7 +149,11 @@ function getSecondChild(htmlElement) {
 }
 
 function getFirstTodoListDomItem() {
-    return getFirstChild(getSecondChild(actual));
+    return getFirstTodoListDomItemFromDomItem(actual);
+}
+
+function getFirstTodoListDomItemFromDomItem(todoListDomItem) {
+    return getFirstChild(getSecondChild(todoListDomItem));
 }
 
 function getSecondTodoListDomItem() {
@@ -146,8 +182,8 @@ function getFirstTodoListItemDeleteButton() {
     return TodoListDomBuilder.getAllDeleteButtons(getSecondChild(actual))[0];
 }
 
-function getFirstTodoListItemCompleteButton() {
-    return TodoListDomBuilder.getAllCompleteButtons(getSecondChild(actual))[0];
+function getFirstTodoListItemCompleteButton(actualTodoList) {
+    return TodoListDomBuilder.getAllCompleteButtons(getSecondChild(actualTodoList))[0];
 }
 
 function getSecondTodoListItemDeleteButton() {

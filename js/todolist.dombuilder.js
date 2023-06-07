@@ -12,7 +12,7 @@ export class TodoListDomBuilder {
     #hasDeleteButtons
     #hasCompleteButton
     #completedListItemCssClass
-    
+
     build(todoListItems) {
         let list = this.#getNewOrderedList();
         for (const item of todoListItems) {
@@ -21,17 +21,17 @@ export class TodoListDomBuilder {
         }
         return list
     }
-    
+
     withListCssClass(cssClass) {
         this.#listCssClass = cssClass
         return this
     }
-    
+
     withListItemsCssClass(cssClass) {
         this.#listItemCssClass = cssClass
         return this
     }
-    
+
     withCompletedListItemsCssClass(cssClass) {
         this.#completedListItemCssClass = cssClass
         return this
@@ -41,45 +41,45 @@ export class TodoListDomBuilder {
         this.#hasDeleteButtons = true
         return this
     }
-    
+
     withCompleteButtons() {
         this.#hasCompleteButton = true
         return this
     }
-    
+
     static getAllDeleteButtons(orderedList) {
         return orderedList.querySelectorAll(this.#getButtonQuerySelector(this.deleteButtonName))
     }
-    
+
     static getAllCompleteButtons(orderedList) {
         return orderedList.querySelectorAll(this.#getButtonQuerySelector(this.completeButtonName))
     }
-    
+
     #getNewOrderedList() {
         let list = document.createElement(ORDERED_LIST_TAG_NAME);
         list.className = this.#listCssClass;
         return list;
     }
-    
+
     #getNewListItem(item) {
         let listItem = document.createElement(LIST_ITEM_TAG_NAME);
         listItem.innerText = item.value.displayedText;
-        
         listItem.className = this.#getListItemCssClassNames(item.value.isCompleted);
-
+        listItem.value = item.id
+        
         if (this.#hasDeleteButtons) {
             listItem.append(this.#getNewDeleteButtonForToDoListItem(item.id))
         }
-        
+
         if (this.#hasCompleteButton && item.value.isCompleted === false) {
             listItem.append(this.#getNewCompleteButtonForToDoListItem(item.id))
         }
-        
+
         return listItem;
     }
-    
+
     static #getButtonQuerySelector(buttonName) { return "[name='" + buttonName + "']" }
-    
+
     #getNewDeleteButtonForToDoListItem(itemId) {
         let button = this.#getNewStandardButton(itemId)
         button.name = TodoListDomBuilder.deleteButtonName;

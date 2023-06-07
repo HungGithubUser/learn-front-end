@@ -99,6 +99,7 @@ function shouldReturnOneListItemFromGetAll() {
     expect(actual.tagName.toUpperCase()).toEqual(ORDERED_LIST_TAG_NAME.toUpperCase());
     expect(actual.childElementCount).toEqual(1);
     expect(getFirstListItem(actual).tagName.toUpperCase()).toEqual(LIST_ITEM_TAG_NAME.toUpperCase());
+    expect(Number(getFirstListItem(actual).value)).toEqual(todoList.getAll()[0].id);
     expect(getFirstListItem(actual).innerText).toEqual(learnJavaScript);
 }
 

@@ -138,15 +138,43 @@ test('should return 0 item for get top when there is 0 item in list', () => {
 })
 
 test('should complete task successfully', () => {
-  todoList.add(learnCsharp)
-  todoList.completeTask(getFirstTodoListIdByDisplayedText(learnCsharp))
-  expect(getAllToDoListIsCompletedStatus()).toStrictEqual([true])
+  shouldCompleteTaskSuccessfully(learnCsharp);
 })
 
 test('should complete empty task successfully', () => {
   todoList.add(learnCsharp)
   todoList.completeTask(-1)
 })
+
+test('should incomplete task successfully', () => {
+  shouldCompleteTaskSuccessfully(learnCsharp)
+  todoList.incompleteTask(getFirstTodoListIdByDisplayedText(learnCsharp))
+  expect(getAllToDoListIsCompletedStatus()).toStrictEqual([false])
+})
+
+test('should incomplete empty task successfully', () => {
+  todoList.add(learnCsharp)
+  todoList.incompleteTask(-1)
+})
+
+test('should toggle complete task successfully', () => {
+  todoList.add(learnCsharp)
+  expect(getAllToDoListIsCompletedStatus()).toStrictEqual([false])
+  todoList.toggleCompleteTask(getFirstTodoListIdByDisplayedText(learnCsharp))
+  expect(getAllToDoListIsCompletedStatus()).toStrictEqual([true])
+  todoList.toggleCompleteTask(getFirstTodoListIdByDisplayedText(learnCsharp))
+  expect(getAllToDoListIsCompletedStatus()).toStrictEqual([false])
+})
+
+test('should toggle complete empty task successfully', () => {
+  todoList.toggleCompleteTask(-1)
+})
+
+function shouldCompleteTaskSuccessfully(taskName) {
+  todoList.add(taskName);
+  todoList.completeTask(getFirstTodoListIdByDisplayedText(taskName));
+  expect(getAllToDoListIsCompletedStatus()).toStrictEqual([true]);
+}
 
 function getAllToDoListDisplayedText() {
   return toDisplayedTextArray(todoList.getAll())

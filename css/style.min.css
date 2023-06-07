@@ -1,1 +1,1 @@
-.ordered-todo-list{padding:0;list-style-position:inside;width:max-content;margin:auto}li.ordered-todo-list--items:nth-child(odd){background-color:#f0f8ff}li.ordered-todo-list--items-completed{text-decoration:line-through}
+.ordered-todo-list{padding:0;list-style-position:inside;width:max-content;margin:auto}li.ordered-todo-list--items:nth-child(odd){background-color:#f0f8ff}.text-line-through{text-decoration:line-through}.cursor-pointer{cursor:pointer}

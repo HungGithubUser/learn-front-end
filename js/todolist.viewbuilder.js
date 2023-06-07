@@ -6,6 +6,8 @@ import { TodoListDomBuilder } from './todolist.dombuilder.js'
 export class TodoListViewBuilder {
     #todoList
     #hasInputField
+    #hasCompleteTaskButtons
+    #hasCompleteTaskToggleOnItemClick
 
     constructor(todoList) {
         this.#todoList = todoList
@@ -14,6 +16,16 @@ export class TodoListViewBuilder {
     withInputField() {
         this.#hasInputField = true
         return this
+    }
+
+    withCompleteTaskButtons() {
+        this.#hasCompleteTaskButtons = true
+        return this;
+    }
+
+    withCompleteTaskToggleOnItemClick() {
+        this.#hasCompleteTaskToggleOnItemClick = true
+        return this;
     }
 
     build() {
@@ -33,8 +45,17 @@ export class TodoListViewBuilder {
 
     #renderNewToDoList(htmlElementToBeManipulated) {
         let todoOrderedList = this.#getNewTodoListOrderedListHtmlElement()
+
         this.#addDeleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated)
-        this.#addCompleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated)
+
+        if (this.#hasCompleteTaskButtons) {
+            this.#addCompleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated)
+        }
+
+        if (this.#hasCompleteTaskToggleOnItemClick) {
+            this.#addCompleteTaskToggleOnItemClickEvents(todoOrderedList, htmlElementToBeManipulated)
+        }
+
         htmlElementToBeManipulated.appendChild(todoOrderedList)
     }
 
@@ -75,40 +96,62 @@ export class TodoListViewBuilder {
     }
 
     #getNewTodoListOrderedListHtmlElement() {
-        return new TodoListDomBuilder()
+        let domBuilder = new TodoListDomBuilder()
             .withListCssClass("ordered-todo-list")
-            .withListItemsCssClass("ordered-todo-list--items")
-            .withCompletedListItemsCssClass("ordered-todo-list--items-completed")
+            .withCompletedListItemsCssClass("text-line-through")
             .withDeleteButtons()
-            .withCompleteButtons()
-            .build(this.#todoList.getAll())
+
+        const itemCssClass = "ordered-todo-list--items"
+        if (this.#hasCompleteTaskButtons) {
+            domBuilder = domBuilder.withCompleteButtons()
+        }
+
+        if(this.#hasCompleteTaskToggleOnItemClick){
+            domBuilder = domBuilder.withListItemsCssClass(itemCssClass + " cursor-pointer")
+        }
+        else {
+            domBuilder = domBuilder.withListItemsCssClass(itemCssClass)
+        }
+
+        return domBuilder.build(this.#todoList.getAll())
     }
 
     #addDeleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated) {
         let deleteButtons = TodoListDomBuilder.getAllDeleteButtons(todoOrderedList)
         const eventParameters = {
-            buttons: deleteButtons,
+            elements: deleteButtons,
             htmlElement: htmlElementToBeManipulated,
             todoList: this.#todoList,
             callBackFunction: this.#deleteTodoListItem
         }
-        this.#wireUpListItemButtonsClickEvents(eventParameters)
+        this.#wireUpListItemsClickedEvents(eventParameters)
     }
 
     #addCompleteButtonsEvents(todoOrderedList, htmlElementToBeManipulated) {
         let completeButtons = TodoListDomBuilder.getAllCompleteButtons(todoOrderedList)
         const eventParameters = {
-            buttons: completeButtons,
+            elements: completeButtons,
             htmlElement: htmlElementToBeManipulated,
             todoList: this.#todoList,
             callBackFunction: this.#completeTodoListItem
         }
-        this.#wireUpListItemButtonsClickEvents(eventParameters)
+        this.#wireUpListItemsClickedEvents(eventParameters)
     }
 
-    #wireUpListItemButtonsClickEvents(eventParameters) {
-        for (let button of eventParameters.buttons) {
-            button.addEventListener("click", (e) => {
+    #addCompleteTaskToggleOnItemClickEvents(todoOrderedList, htmlElementToBeManipulated) {
+        const eventParameters = {
+            elements: todoOrderedList.childNodes,
+            htmlElement: htmlElementToBeManipulated,
+            todoList: this.#todoList,
+            callBackFunction: this.#toggleCompleteTodoListItem
+        }
+        this.#wireUpListItemsClickedEvents(eventParameters)
+    }
+
+    #wireUpListItemsClickedEvents(eventParameters) {
+        for (let element of eventParameters.elements) {
+            element.addEventListener("click", (e) => {
+                if (e.target !== e.currentTarget) return;
                 eventParameters.callBackFunction(Number(e.target.value), eventParameters.todoList)
                 this.#reRenderToDoList(eventParameters.htmlElement)
             })
@@ -121,5 +164,9 @@ export class TodoListViewBuilder {
 
     #completeTodoListItem(todoListItemId, todoList) {
         todoList.completeTask(todoListItemId)
+    }
+
+    #toggleCompleteTodoListItem(todoListItemId, todoList) {
+        todoList.toggleCompleteTask(todoListItemId)
     }
 }
