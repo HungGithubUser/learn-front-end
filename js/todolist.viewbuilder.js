@@ -99,18 +99,15 @@ export class TodoListViewBuilder {
         let domBuilder = new TodoListDomBuilder()
             .withListCssClass("ordered-todo-list")
             .withCompletedListItemsCssClass("text-line-through")
+            .withListItemsCssClass("ordered-todo-list--items")
             .withDeleteButtons()
 
-        const itemCssClass = "ordered-todo-list--items"
         if (this.#hasCompleteTaskButtons) {
             domBuilder = domBuilder.withCompleteButtons()
         }
 
         if(this.#hasCompleteTaskToggleOnItemClick){
-            domBuilder = domBuilder.withListItemsCssClass(itemCssClass + " cursor-pointer")
-        }
-        else {
-            domBuilder = domBuilder.withListItemsCssClass(itemCssClass)
+            domBuilder = domBuilder.withListItemsCursorPointer()
         }
 
         return domBuilder.build(this.#todoList.getAll())

@@ -1,5 +1,6 @@
 'use strict';
 
+import { CURSOR_POINTER_CSS_CLASS } from "./constants.css.js";
 import { ORDERED_LIST_TAG_NAME, LIST_ITEM_TAG_NAME, BUTTON_TAG_NAME } from "./constants.dom.js";
 
 export class TodoListDomBuilder {
@@ -12,6 +13,7 @@ export class TodoListDomBuilder {
     #hasDeleteButtons
     #hasCompleteButton
     #completedListItemCssClass
+    #hasListItemsCursorPointer
 
     build(todoListItems) {
         let list = this.#getNewOrderedList();
@@ -47,6 +49,11 @@ export class TodoListDomBuilder {
         return this
     }
 
+    withListItemsCursorPointer() {
+        this.#hasListItemsCursorPointer = true
+        return this
+    }
+
     static getAllDeleteButtons(orderedList) {
         return orderedList.querySelectorAll(this.#getButtonQuerySelector(this.deleteButtonName))
     }
@@ -64,9 +71,10 @@ export class TodoListDomBuilder {
     #getNewListItem(item) {
         let listItem = document.createElement(LIST_ITEM_TAG_NAME);
         listItem.innerText = item.value.displayedText;
+        console.log(listItem.className)
         listItem.className = this.#getListItemCssClassNames(item.value.isCompleted);
         listItem.value = item.id
-        
+
         if (this.#hasDeleteButtons) {
             listItem.append(this.#getNewDeleteButtonForToDoListItem(item.id))
         }
@@ -102,18 +110,21 @@ export class TodoListDomBuilder {
     }
 
     #getListItemCssClassNames(todoListItemIsCompleted) {
-        let classNames
-        const shouldAddCompletedListItemCssClass = todoListItemIsCompleted && this.#completedListItemCssClass;
-
-        if (!this.#listItemCssClass && shouldAddCompletedListItemCssClass) {
-            classNames = this.#completedListItemCssClass;
-            return classNames
-        }
-
+        let classNames;
         classNames = this.#listItemCssClass;
-        if (shouldAddCompletedListItemCssClass) {
-            classNames += " " + this.#completedListItemCssClass;
+
+        if (todoListItemIsCompleted) {
+            classNames = this.#addCssClass(classNames, this.#completedListItemCssClass);
         }
+
+        if (this.#hasListItemsCursorPointer) {
+            classNames = this.#addCssClass(classNames, CURSOR_POINTER_CSS_CLASS);
+        }
+
         return classNames
+    }
+
+    #addCssClass(currentClassNames, cssClass) {
+        return !!currentClassNames ? currentClassNames + " " + cssClass : cssClass;
     }
 }

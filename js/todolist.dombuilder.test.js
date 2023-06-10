@@ -1,5 +1,6 @@
 'use strict';
 
+import { CURSOR_POINTER_CSS_CLASS } from './constants.css';
 import { BUTTON_TAG_NAME, LIST_ITEM_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom';
 import { TodoList } from './todolist';
 import { TodoListDomBuilder } from './todolist.dombuilder'
@@ -70,6 +71,20 @@ test.each(["ordered-todo-list--item-completed", "ordered-todo-list--item-1-compl
         let actual = sut.withCompletedListItemsCssClass(expectedListItemCssClass).build(todoList.getAll())
         expect(getFirstListItem(actual).className).toEqual(expectedListItemCssClass)
     })
+
+test.each(["ordered-todo-list--item-completed", "ordered-todo-list--item-1-completed", "ordered-todo-list--item-2-completed", "ordered-todo-list--item-1-completed ordered-todo-list--item-2-completed"])
+    ('completed tasks should have configured css class: %p with cursor pointer', (expectedListItemCssClass) => {
+        setUpActualWithOneCompletedTask();
+        let actual = sut.withListItemsCursorPointer().withCompletedListItemsCssClass(expectedListItemCssClass).build(todoList.getAll())
+        expect(getFirstListItem(actual).classList).toContain(expectedListItemCssClass.split(" ")[0])
+        expect(getFirstListItem(actual).classList).toContain(CURSOR_POINTER_CSS_CLASS)
+    })
+
+test('should set list items css cursor pointer', () => {
+    setUpActualWithOneCompletedTask();
+    let actual = sut.withListItemsCursorPointer().build(todoList.getAll())
+    expect(getFirstListItem(actual).className).toEqual(CURSOR_POINTER_CSS_CLASS)
+})
 
 test('should return all correct delete button elements', () => {
     todoList.add(learnJavaScript);
