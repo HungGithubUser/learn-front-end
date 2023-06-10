@@ -10,5 +10,9 @@
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
     "build": "webpack --mode production",
     "watch": "webpack --watch"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0"
   }
 }
