@@ -7,8 +7,10 @@ import { getDeleteIcon } from "./icons.fontawesome.js";
 export class TodoListDomBuilder {
     static deleteButtonName = "Delete"
     static deleteButtonTextContent = ""
+    static deleteButtonTitle = TodoListDomBuilder.deleteButtonName
     static completeButtonName = "Complete"
     static completeButtonTextContent = TodoListDomBuilder.completeButtonName
+    static completeButtonTitle = TodoListDomBuilder.completeButtonName
     #listCssClass
     #listItemCssClass
     #hasDeleteButtons
@@ -90,23 +92,32 @@ export class TodoListDomBuilder {
     static #getButtonQuerySelector(buttonName) { return "[name='" + buttonName + "']" }
 
     #getNewDeleteButtonForToDoListItem(itemId) {
-        let button = this.#getNewStandardButton(itemId)
-        button.name = TodoListDomBuilder.deleteButtonName;
-        button.textContent = TodoListDomBuilder.deleteButtonTextContent;
+        const buttonContent = {
+            name: TodoListDomBuilder.deleteButtonName,
+            textContent: TodoListDomBuilder.deleteButtonTextContent,
+            title: TodoListDomBuilder.deleteButtonTitle
+        }
+        let button = this.#getNewStandardButton(itemId, buttonContent)
         button.appendChild(getDeleteIcon())
         return button;
     }
 
     #getNewCompleteButtonForToDoListItem(itemId) {
-        let button = this.#getNewStandardButton(itemId);
-        button.name = TodoListDomBuilder.completeButtonName;
-        button.textContent = TodoListDomBuilder.completeButtonTextContent;
+        const buttonContent = {
+            name: TodoListDomBuilder.completeButtonName,
+            textContent: TodoListDomBuilder.completeButtonTextContent,
+            title: TodoListDomBuilder.completeButtonTitle
+        }
+        let button = this.#getNewStandardButton(itemId, buttonContent);
         return button;
     }
 
-    #getNewStandardButton(itemId) {
+    #getNewStandardButton(itemId, buttonContent) {
         let button = document.createElement(BUTTON_TAG_NAME);
         button.value = itemId;
+        button.name = buttonContent.name;
+        button.textContent = buttonContent.textContent;
+        button.title = buttonContent.title;
         button.setAttribute("type", "button");
         return button;
     }

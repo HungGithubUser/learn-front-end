@@ -90,14 +90,14 @@ test('should return all correct delete button elements', () => {
     todoList.add(learnJavaScript);
     todoList.add(learnPython);
     let actual = TodoListDomBuilder.getAllDeleteButtons(sut.withDeleteButtons().build(todoList.getAll()))
-    AssertActualHasCorrectButtonsInList(actual, TodoListDomBuilder.deleteButtonName, TodoListDomBuilder.deleteButtonTextContent);
+    AssertActualHasCorrectButtonsInList(actual, TodoListDomBuilder.deleteButtonName, TodoListDomBuilder.deleteButtonTextContent, TodoListDomBuilder.deleteButtonTitle);
 })
 
 test('should return all correct complete button elements', () => {
     todoList.add(learnJavaScript);
     todoList.add(learnPython);
     let actual = TodoListDomBuilder.getAllCompleteButtons(sut.withCompleteButtons().build(todoList.getAll()))
-    AssertActualHasCorrectButtonsInList(actual, TodoListDomBuilder.completeButtonName, TodoListDomBuilder.completeButtonTextContent);
+    AssertActualHasCorrectButtonsInList(actual, TodoListDomBuilder.completeButtonName, TodoListDomBuilder.completeButtonTextContent, TodoListDomBuilder.completeButtonTitle);
 })
 
 test('should return empty button elements', () => {
@@ -135,14 +135,16 @@ function shouldHaveACorrectStandardButton(actual) {
     expect(Number(getFirstListItemButtons(actual)[0].value)).toEqual(todoList.getTop(1)[0].id);
 }
 
-function AssertActualHasCorrectButtonsInList(actual, buttonName, buttonTextContent) {
+function AssertActualHasCorrectButtonsInList(actual, buttonName, buttonTextContent, buttonTitle) {
     expect(actual.length).toEqual(2);
     expect(Number(actual[0].value)).toEqual(todoList.getTop(1)[0].id);
     expect(actual[0].name).toEqual(buttonName);
     expect(actual[0].textContent).toEqual(buttonTextContent);
+    expect(actual[0].title).toEqual(buttonTitle);
     expect(Number(actual[1].value)).toEqual(todoList.getTop(2)[1].id);
     expect(actual[1].name).toEqual(buttonName);
     expect(actual[1].textContent).toEqual(buttonTextContent);
+    expect(actual[1].title).toEqual(buttonTitle);
 }
 
 function setUpActualWithOneCompletedTask() {
