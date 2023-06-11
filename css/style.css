@@ -17,3 +17,7 @@ li.ordered-todo-list--items:nth-child(odd) {
 .cursor-pointer{
     cursor: pointer;
 }
+
+.clickable-font-awesome{
+    pointer-events: none;
+}

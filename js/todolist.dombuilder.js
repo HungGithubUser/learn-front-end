@@ -2,10 +2,11 @@
 
 import { CURSOR_POINTER_CSS_CLASS } from "./constants.css.js";
 import { ORDERED_LIST_TAG_NAME, LIST_ITEM_TAG_NAME, BUTTON_TAG_NAME } from "./constants.dom.js";
+import { getDeleteIcon } from "./icons.fontawesome.js";
 
 export class TodoListDomBuilder {
     static deleteButtonName = "Delete"
-    static deleteButtonTextContent = TodoListDomBuilder.deleteButtonName
+    static deleteButtonTextContent = ""
     static completeButtonName = "Complete"
     static completeButtonTextContent = TodoListDomBuilder.completeButtonName
     #listCssClass
@@ -92,6 +93,7 @@ export class TodoListDomBuilder {
         let button = this.#getNewStandardButton(itemId)
         button.name = TodoListDomBuilder.deleteButtonName;
         button.textContent = TodoListDomBuilder.deleteButtonTextContent;
+        button.appendChild(getDeleteIcon())
         return button;
     }
 

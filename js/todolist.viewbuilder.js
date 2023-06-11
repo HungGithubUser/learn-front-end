@@ -119,7 +119,7 @@ export class TodoListViewBuilder {
             elements: deleteButtons,
             htmlElement: htmlElementToBeManipulated,
             todoList: this.#todoList,
-            callBackFunction: this.#deleteTodoListItem
+            callBackFunction: this.#deleteTodoListItem,
         }
         this.#wireUpListItemsClickedEvents(eventParameters)
     }
@@ -130,7 +130,7 @@ export class TodoListViewBuilder {
             elements: completeButtons,
             htmlElement: htmlElementToBeManipulated,
             todoList: this.#todoList,
-            callBackFunction: this.#completeTodoListItem
+            callBackFunction: this.#completeTodoListItem,
         }
         this.#wireUpListItemsClickedEvents(eventParameters)
     }
