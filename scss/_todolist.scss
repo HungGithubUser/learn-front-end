@@ -1,10 +1,11 @@
+@use '../node_modules/bootstrap/scss/bootstrap.scss';
+
 .ordered-todo-list {
     padding: 0;
     list-style-position: inside;
     width: max-content;
     margin: auto;
 }
-
 
 li.ordered-todo-list--items:nth-child(odd) {
     background-color: aliceblue;
@@ -14,10 +15,10 @@ li.ordered-todo-list--items:nth-child(odd) {
     text-decoration: line-through;
 }
 
-.cursor-pointer{
+.cursor-pointer {
     cursor: pointer;
 }
 
-.pointer-events-none{
+.pointer-events-none {
     pointer-events: none;
 }
