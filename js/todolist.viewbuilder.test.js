@@ -3,18 +3,26 @@
 import { TodoListViewBuilder } from './todolist.viewbuilder'
 import { TodoListDomBuilder } from './todolist.dombuilder'
 import { TodoList } from './todolist'
-import { INPUT_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom';
+import { DIV_TAG_NAME, INPUT_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom';
 
 var actual
 var todoList
 const learnJavaScript = "learn Java Script"
 const learnPython = "learn Python"
 const learnJava = "learn Java"
+
 beforeEach(() => {
     todoList = new TodoList()
     let sut = new TodoListViewBuilder(todoList)
     actual = sut.withInputField().withCompleteTaskButtons().build()
 })
+
+test.each(["class-name-1", "class-name-2", "class-name-1 class-name-2"])
+    ('should set outer div element class name successfully with css class: %p', (expectedCssClass) => {
+        let actualWithDivClassName = new TodoListViewBuilder(todoList).withOuterDivElementCssClass(expectedCssClass).build()
+        expect(actualWithDivClassName.tagName).toBe(DIV_TAG_NAME.toUpperCase())
+        expect(actualWithDivClassName.className).toBe(expectedCssClass)
+    })
 
 test('should add todolist items successfully when input is entered', () => {
     shouldAddTotoListItemsSuccessfullyWhenInputIsEntered();

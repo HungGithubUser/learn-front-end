@@ -8,6 +8,7 @@ export class TodoListViewBuilder {
     #hasInputField
     #hasCompleteTaskButtons
     #hasCompleteTaskToggleOnItemClick
+    #outerDivElementCssClass
 
     constructor(todoList) {
         this.#todoList = todoList
@@ -28,13 +29,24 @@ export class TodoListViewBuilder {
         return this;
     }
 
+    withOuterDivElementCssClass(cssClass) {
+        this.#outerDivElementCssClass = cssClass
+        return this;
+    }
+
     build() {
-        let htmlElement = document.createElement(DIV_TAG_NAME)
+        let htmlElement = this.#getNewOuterDivWrapperElement()
         if (this.#hasInputField) {
             this.#addInputField(htmlElement)
         }
         this.#renderNewToDoList(htmlElement)
         return htmlElement
+    }
+
+    #getNewOuterDivWrapperElement() {
+        let element = document.createElement(DIV_TAG_NAME)
+        element.className = this.#outerDivElementCssClass
+        return element
     }
 
     #addInputField(htmlElement) {
@@ -97,16 +109,16 @@ export class TodoListViewBuilder {
 
     #getNewTodoListOrderedListHtmlElement() {
         let domBuilder = new TodoListDomBuilder()
-            .withListCssClass("ordered-todo-list")
+            .withListCssClass("list-group list-group-numbered")
             .withCompletedListItemsCssClass("text-line-through")
-            .withListItemsCssClass("ordered-todo-list--items")
+            .withListItemsCssClass("list-group-item align-items-center")
             .withDeleteButtons()
 
         if (this.#hasCompleteTaskButtons) {
             domBuilder = domBuilder.withCompleteButtons()
         }
 
-        if(this.#hasCompleteTaskToggleOnItemClick){
+        if (this.#hasCompleteTaskToggleOnItemClick) {
             domBuilder = domBuilder.withListItemsCursorPointer()
         }
 

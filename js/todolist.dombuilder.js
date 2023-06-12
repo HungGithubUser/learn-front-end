@@ -74,7 +74,6 @@ export class TodoListDomBuilder {
     #getNewListItem(item) {
         let listItem = document.createElement(LIST_ITEM_TAG_NAME);
         listItem.innerText = item.value.displayedText;
-        console.log(listItem.className)
         listItem.className = this.#getListItemCssClassNames(item.value.isCompleted);
         listItem.value = item.id
 
