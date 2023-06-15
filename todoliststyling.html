@@ -7,21 +7,33 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/bundle.css">
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-6">
                 <input aria-label="add to do list" placeholder="Add to do list" class="form-control text-center">
-                <ol class="list-group list-group-numbered mt-2">
+                <ol class="list-group list-group-numbered m-5">
                     <li class="list-group-item cursor-pointer align-items-center" value="7">sadasdasd<button value="7"
                             name="Delete" title="Delete" type="button" class="btn btn-danger btn-sm float-end"></button>
                     </li>
-                    <li class="list-group-item cursor-pointer align-items-center text-line-through" value="7">sadasdasd<button value="7"
-                        name="Delete" title="Delete" type="button" class="btn btn-danger btn-sm float-end"></button>
-                </li>
+                    <li class="list-group-item cursor-pointer align-items-center text-line-through" value="7">
+                        sadasdasd<button value="7" name="Delete" title="Delete" type="button"
+                            class="btn btn-danger btn-sm float-end"></button>
+                    </li>
                 </ol>
+                <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </div>
 </body>
+
 </html>
