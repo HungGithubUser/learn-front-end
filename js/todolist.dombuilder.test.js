@@ -51,6 +51,16 @@ test('should return 1 list item from getAll with delete button', () => {
     expect(getFirstListItemButtons(actual)[0].textContent).toEqual(TodoListDomBuilder.deleteButtonTextContent)
 })
 
+test.each(["ordered-todo-list--item", "ordered-todo-list--item-1 ordered-todo-list--item"])
+    ('should return 1 list item from getAll with delete button with correct css class: %p', (expectedButtonCssClass) => {
+        shouldReturnOneListItemFromGetAll()
+        let actual = sut.withDeleteButtons().withDeleteButtonsCssClass(expectedButtonCssClass).build(todoList.getAll())
+        shouldHaveACorrectStandardButton(actual);
+        expect(getFirstListItemButtons(actual)[0].name).toEqual(TodoListDomBuilder.deleteButtonName)
+        expect(getFirstListItemButtons(actual)[0].textContent).toEqual(TodoListDomBuilder.deleteButtonTextContent)
+        expect(getFirstListItemButtons(actual)[0].className).toEqual(expectedButtonCssClass)
+    })
+
 test('should return 1 list item from getAll with complete button', () => {
     shouldReturnOneListItemFromGetAll()
     let actual = sut.withCompleteButtons().build(todoList.getAll());

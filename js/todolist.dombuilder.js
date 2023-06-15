@@ -17,6 +17,7 @@ export class TodoListDomBuilder {
     #hasCompleteButton
     #completedListItemCssClass
     #hasListItemsCursorPointer
+    #deleteButtonCssClass
 
     build(todoListItems) {
         let list = this.#getNewOrderedList();
@@ -46,7 +47,10 @@ export class TodoListDomBuilder {
         this.#hasDeleteButtons = true
         return this
     }
-
+    withDeleteButtonsCssClass(cssClass) {
+        this.#deleteButtonCssClass = cssClass
+        return this
+    }
     withCompleteButtons() {
         this.#hasCompleteButton = true
         return this
@@ -97,6 +101,7 @@ export class TodoListDomBuilder {
             title: TodoListDomBuilder.deleteButtonTitle
         }
         let button = this.#getNewStandardButton(itemId, buttonContent)
+        button.className = this.#deleteButtonCssClass
         button.appendChild(getDeleteIcon())
         return button;
     }

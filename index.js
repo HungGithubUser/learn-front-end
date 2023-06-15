@@ -4,7 +4,12 @@ import { TodoListViewBuilder } from "./js/todolist.viewbuilder.js";
 
 let containerDivElement = getNewDivElement("container-fluid")
 let rowDivElement = getNewDivElement("row justify-content-center")
-let todoListView = new TodoListViewBuilder(new TodoList()).withInputField().withOuterDivElementCssClass("col-6").withCompleteTaskToggleOnItemClick().build()
+let todoListView = new TodoListViewBuilder(new TodoList())
+.withInputField()
+.withInputElementCssClass("form-control text-center")
+.withOuterDivElementCssClass("col-6")
+.withCompleteTaskToggleOnItemClick()
+.build()
 containerDivElement.appendChild(rowDivElement)
 rowDivElement.appendChild(todoListView)
 document.body.append(containerDivElement)

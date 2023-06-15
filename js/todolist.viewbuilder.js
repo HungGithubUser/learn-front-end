@@ -9,6 +9,7 @@ export class TodoListViewBuilder {
     #hasCompleteTaskButtons
     #hasCompleteTaskToggleOnItemClick
     #outerDivElementCssClass
+    #inputElementCssClass
 
     constructor(todoList) {
         this.#todoList = todoList
@@ -27,6 +28,11 @@ export class TodoListViewBuilder {
     withCompleteTaskToggleOnItemClick() {
         this.#hasCompleteTaskToggleOnItemClick = true
         return this;
+    }
+
+    withInputElementCssClass(cssClass) {
+        this.#inputElementCssClass = cssClass
+        return this
     }
 
     withOuterDivElementCssClass(cssClass) {
@@ -75,6 +81,7 @@ export class TodoListViewBuilder {
         let input = document.createElement(INPUT_TAG_NAME)
         input.setAttribute("aria-label", "add to do list")
         input.setAttribute("placeholder", "Add to do list")
+        input.className = this.#inputElementCssClass
         return input
     }
 
@@ -112,6 +119,7 @@ export class TodoListViewBuilder {
             .withListCssClass("list-group list-group-numbered")
             .withCompletedListItemsCssClass("text-line-through")
             .withListItemsCssClass("list-group-item align-items-center")
+            .withDeleteButtonsCssClass("btn btn-danger btn-sm float-end")
             .withDeleteButtons()
 
         if (this.#hasCompleteTaskButtons) {

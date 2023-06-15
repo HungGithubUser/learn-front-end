@@ -24,6 +24,13 @@ test.each(["class-name-1", "class-name-2", "class-name-1 class-name-2"])
         expect(actualWithDivClassName.className).toBe(expectedCssClass)
     })
 
+test.each(["class-name-1", "class-name-2", "class-name-1 class-name-2"])
+    ('should set input element class name successfully with css class: %p', (expectedCssClass) => {
+        let actualWithInputClassName = new TodoListViewBuilder(todoList).withInputField().withInputElementCssClass(expectedCssClass).build()
+        expect(getFirstChild(actualWithInputClassName).tagName).toBe(INPUT_TAG_NAME.toUpperCase())
+        expect(getFirstChild(actualWithInputClassName).className).toBe(expectedCssClass)
+    })
+
 test('should add todolist items successfully when input is entered', () => {
     shouldAddTotoListItemsSuccessfullyWhenInputIsEntered();
 })
