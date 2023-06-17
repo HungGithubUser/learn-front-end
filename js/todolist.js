@@ -51,12 +51,20 @@ class LinkedList {
         return todoItems
     }
 
-    getTopNodeAsArray(count) {
+
+    getTopNodeAsArray(count, afterId) {
         let todoItems = []
 
-        if (count > 0 && this.#head) {
-            this.#fillArrayWithTopNNodes(todoItems, count);
+        if (count <= 0) {
+            return todoItems
+        }
 
+        if (afterId == undefined && this.#head) {
+            this.#fillArrayWithTopNNodes(todoItems, count, this.#head);
+        }
+
+        if (afterId != undefined && this.#nodeIdToNode[afterId] && this.#nodeIdToNode[afterId].next) {
+            this.#fillArrayWithTopNNodes(todoItems, count, this.#nodeIdToNode[afterId].next);
         }
 
         return todoItems
@@ -130,10 +138,10 @@ class LinkedList {
         }
     }
 
-    #fillArrayWithTopNNodes(array, n) {
-        array.push(this.#head)
+    #fillArrayWithTopNNodes(array, n, node) {
+        array.push(node)
         let remain = n - 1
-        let next = this.#head.next
+        let next = node.next
         while (remain-- > 0 && next) {
             array.push(next)
             next = next.next;
@@ -181,8 +189,8 @@ export class TodoList {
         return this.#todoList.toArray()
     }
 
-    getTop(count) {
-        return this.#todoList.getTopNodeAsArray(count)
+    getTop(count, afterId = undefined) {
+        return this.#todoList.getTopNodeAsArray(count, afterId)
     }
 
     removeById(id) {
@@ -196,7 +204,7 @@ export class TodoList {
     incompleteTask(id) {
         this.#todoList.setIsCompleted(id, false)
     }
-    
+
     toggleCompleteTask(id) {
         this.#todoList.toggleIsCompleted(id)
     }

@@ -10,6 +10,7 @@ export class TodoListViewBuilder {
     #hasCompleteTaskToggleOnItemClick
     #outerDivElementCssClass
     #inputElementCssClass
+    #hasPagination
 
     constructor(todoList) {
         this.#todoList = todoList
@@ -37,6 +38,11 @@ export class TodoListViewBuilder {
 
     withOuterDivElementCssClass(cssClass) {
         this.#outerDivElementCssClass = cssClass
+        return this;
+    }
+
+    withPagination() {
+        this.#hasPagination = true
         return this;
     }
 
@@ -116,7 +122,7 @@ export class TodoListViewBuilder {
 
     #getNewTodoListOrderedListHtmlElement() {
         let domBuilder = new TodoListDomBuilder()
-            .withListCssClass("list-group list-group-numbered")
+            .withListCssClass("list-group list-group-numbered m-5")
             .withCompletedListItemsCssClass("text-line-through")
             .withListItemsCssClass("list-group-item align-items-center")
             .withDeleteButtonsCssClass("btn btn-danger btn-sm float-end")

@@ -119,6 +119,21 @@ test('should return 1 item for get top when there is more than 1 item in list', 
   expect(toDisplayedTextArray(actual)).toStrictEqual([learnCsharp])
 })
 
+test('should return 1 item for get top with offset correctly', () => {
+  todoList.add(learnCsharp)
+  todoList.add(learnJava)
+  const afterId = todoList.getTop(1)[0].id
+  const actual = todoList.getTop(1, afterId)
+  expect(actual.length).toEqual(1)
+  expect(toDisplayedTextArray(actual)).toStrictEqual([learnJava])
+
+})
+
+test('should return empty list for not exist afterId', () => {
+  const actual = todoList.getTop(1, 10)
+  expect(actual.length).toEqual(0)
+})
+
 test('should return 2 item for get top when there are 2 items in list', () => {
   todoList.add(learnCsharp)
   todoList.add(learnCsharp)

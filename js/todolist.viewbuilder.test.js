@@ -3,7 +3,7 @@
 import { TodoListViewBuilder } from './todolist.viewbuilder'
 import { TodoListDomBuilder } from './todolist.dombuilder'
 import { TodoList } from './todolist'
-import { DIV_TAG_NAME, INPUT_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom';
+import { DIV_TAG_NAME, INPUT_TAG_NAME, NAV_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom';
 
 var actual
 var todoList
@@ -100,6 +100,12 @@ test('should not exists complete buttons when built without complete buttons', (
     expect(getFirstTodoListItemCompleteButton(actualWithoutCompleteButton)).toBeFalsy();
 })
 
+test('should have pagination feature', () => {
+    let actualWithPagination = new TodoListViewBuilder(todoList).withPagination().build()
+    expect(getLastChild(actualWithPagination)).toBeTruthy();
+    expect(getLastChild(actualWithPagination).tagName.toUpperCase()).toEqual(NAV_TAG_NAME.toUpperCase());
+})
+
 function shouldAddTotoListItemsSuccessfullyWhenInputIsEntered() {
     expect(getFirstChild(actual)).toBeTruthy();
     expect(getFirstChild(actual).tagName.toUpperCase()).toEqual(INPUT_TAG_NAME.toUpperCase());
@@ -161,6 +167,10 @@ function getFirstChild(htmlElement) {
 
 function getSecondChild(htmlElement) {
     return htmlElement.childNodes[1]
+}
+
+function getLastChild(htmlElement) {
+    return htmlElement.lastChild
 }
 
 function getFirstTodoListDomItem() {
