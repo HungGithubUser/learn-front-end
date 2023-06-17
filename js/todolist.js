@@ -23,13 +23,16 @@ class LinkedList {
     #currentId
     #tail
     #head
+    #totalCount
 
     constructor() {
         this.#nodeIdToNode = []
         this.#currentId = IdStartingValue
+        this.#totalCount = 0
     }
 
     append(todoItemValue) {
+        this.#totalCount++
         let node = this.#createNodeWithValue(todoItemValue);
 
         if (!this.#head) {
@@ -75,6 +78,8 @@ class LinkedList {
             return;
         }
 
+        this.#totalCount--
+
         let node = this.#nodeIdToNode[id]
 
         if (node == this.#head && node == this.#tail) {
@@ -108,6 +113,10 @@ class LinkedList {
         if (this.#nodeIdToNode[id]) {
             this.#nodeIdToNode[id].value.isCompleted = !this.#nodeIdToNode[id].value.isCompleted
         }
+    }
+
+    getTotalCount() {
+        return this.#totalCount
     }
 
     #createNodeWithValue(todoItemValue) {
@@ -207,5 +216,9 @@ export class TodoList {
 
     toggleCompleteTask(id) {
         this.#todoList.toggleIsCompleted(id)
+    }
+
+    getTotalCount() {
+        return this.#todoList.getTotalCount()
     }
 }

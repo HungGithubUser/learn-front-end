@@ -184,7 +184,21 @@ test('should toggle complete task successfully', () => {
 test('should toggle complete empty task successfully', () => {
   todoList.toggleCompleteTask(-1)
 })
-
+test('should get total count correctly', () => {
+  expect(todoList.getTotalCount()).toEqual(0)
+  todoList.add(learnCsharp)
+  expect(todoList.getTotalCount()).toEqual(1)
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp))
+  expect(todoList.getTotalCount()).toEqual(0)
+  
+  todoList.add(learnCsharp)
+  todoList.add(learnCsharp)
+  expect(todoList.getTotalCount()).toEqual(2)
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp))
+  expect(todoList.getTotalCount()).toEqual(1)
+  todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp))
+  expect(todoList.getTotalCount()).toEqual(0)
+})
 function shouldCompleteTaskSuccessfully(taskName) {
   todoList.add(taskName);
   todoList.completeTask(getFirstTodoListIdByDisplayedText(taskName));
