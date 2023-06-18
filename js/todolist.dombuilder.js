@@ -47,10 +47,12 @@ export class TodoListDomBuilder {
         this.#hasDeleteButtons = true
         return this
     }
+
     withDeleteButtonsCssClass(cssClass) {
         this.#deleteButtonCssClass = cssClass
         return this
     }
+
     withCompleteButtons() {
         this.#hasCompleteButton = true
         return this

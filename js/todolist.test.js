@@ -129,6 +129,17 @@ test('should return 1 item for get top with offset correctly', () => {
 
 })
 
+test('should get last correctly',()=>{
+  todoList.add(learnCsharp)
+  const actual = todoList.getLast(1)
+  expect(toDisplayedTextArray(actual)).toStrictEqual([learnCsharp])
+  todoList.add(learnJava)
+  const actual2 = todoList.getLast(1)
+  expect(toDisplayedTextArray(actual2)).toStrictEqual([learnJava])
+  const actual3 = todoList.getLast(2)
+  expect(toDisplayedTextArray(actual3)).toStrictEqual([learnCsharp,learnJava])
+})
+
 test('should return empty list for not exist afterId', () => {
   const actual = todoList.getTop(1, 10)
   expect(actual.length).toEqual(0)
@@ -199,6 +210,7 @@ test('should get total count correctly', () => {
   todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp))
   expect(todoList.getTotalCount()).toEqual(0)
 })
+
 function shouldCompleteTaskSuccessfully(taskName) {
   todoList.add(taskName);
   todoList.completeTask(getFirstTodoListIdByDisplayedText(taskName));

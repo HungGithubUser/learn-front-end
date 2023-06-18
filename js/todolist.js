@@ -37,6 +37,7 @@ class LinkedList {
 
         if (!this.#head) {
             this.#head = node;
+            this.#tail = node;
             return
         }
 
@@ -62,12 +63,42 @@ class LinkedList {
             return todoItems
         }
 
+        const parameters = {
+            todoItems: todoItems,
+            count: count,
+            addNode: function (node, todoItems) { todoItems.push(node) },
+            getNext: function (node) { return node.next }
+        }
+
         if (afterId == undefined && this.#head) {
-            this.#fillArrayWithTopNNodes(todoItems, count, this.#head);
+            parameters.node = this.#head
+            this.#fillArrayWithNodes(parameters);
         }
 
         if (afterId != undefined && this.#nodeIdToNode[afterId] && this.#nodeIdToNode[afterId].next) {
-            this.#fillArrayWithTopNNodes(todoItems, count, this.#nodeIdToNode[afterId].next);
+            parameters.node = this.#nodeIdToNode[afterId].next
+            this.#fillArrayWithNodes(parameters);
+        }
+
+        return todoItems
+    }
+
+    getLastNodeAsArray(count) {
+        let todoItems = []
+
+        if (count <= 0) {
+            return todoItems
+        }
+
+        if (this.#tail) {
+            const parameters = {
+                todoItems: todoItems,
+                count: count,
+                node: this.#tail,
+                addNode: (node, todoItems) => todoItems.unshift(node),
+                getNext: (node) => node.prev
+            }
+            this.#fillArrayWithNodes(parameters);
         }
 
         return todoItems
@@ -147,13 +178,13 @@ class LinkedList {
         }
     }
 
-    #fillArrayWithTopNNodes(array, n, node) {
-        array.push(node)
-        let remain = n - 1
-        let next = node.next
-        while (remain-- > 0 && next) {
-            array.push(next)
-            next = next.next;
+    #fillArrayWithNodes(parameters) {
+        parameters.addNode(parameters.node, parameters.todoItems)
+        parameters.count--
+        let next = parameters.getNext(parameters.node)
+        while (parameters.count-- > 0 && next) {
+            parameters.addNode(next, parameters.todoItems)
+            next = parameters.getNext(next);
         }
     }
 
@@ -201,7 +232,9 @@ export class TodoList {
     getTop(count, afterId = undefined) {
         return this.#todoList.getTopNodeAsArray(count, afterId)
     }
-
+    getLast(count) {
+        return this.#todoList.getLastNodeAsArray(count)
+    }
     removeById(id) {
         this.#todoList.removeNode(id)
     }
