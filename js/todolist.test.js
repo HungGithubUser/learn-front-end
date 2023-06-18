@@ -129,7 +129,7 @@ test('should return 1 item for get top with offset correctly', () => {
 
 })
 
-test('should get last correctly',()=>{
+test('should get last correctly', () => {
   todoList.add(learnCsharp)
   const actual = todoList.getLast(1)
   expect(toDisplayedTextArray(actual)).toStrictEqual([learnCsharp])
@@ -137,7 +137,15 @@ test('should get last correctly',()=>{
   const actual2 = todoList.getLast(1)
   expect(toDisplayedTextArray(actual2)).toStrictEqual([learnJava])
   const actual3 = todoList.getLast(2)
-  expect(toDisplayedTextArray(actual3)).toStrictEqual([learnCsharp,learnJava])
+  expect(toDisplayedTextArray(actual3)).toStrictEqual([learnCsharp, learnJava])
+})
+
+test('should get last with beforeId correctly', () => {
+  todoList.add(learnCsharp)
+  todoList.add(learnJava)
+  const beforeId = todoList.getLast(1)[0].id
+  const actual = todoList.getLast(1, beforeId)
+  expect(toDisplayedTextArray(actual)).toStrictEqual([learnCsharp])
 })
 
 test('should return empty list for not exist afterId', () => {
@@ -201,7 +209,7 @@ test('should get total count correctly', () => {
   expect(todoList.getTotalCount()).toEqual(1)
   todoList.removeById(getFirstTodoListIdByDisplayedText(learnCsharp))
   expect(todoList.getTotalCount()).toEqual(0)
-  
+
   todoList.add(learnCsharp)
   todoList.add(learnCsharp)
   expect(todoList.getTotalCount()).toEqual(2)

@@ -42,7 +42,6 @@ class LinkedList {
         }
 
         this.#appendNodeToEndOfList(node);
-        this.#tail = node;
     }
 
     toArray() {
@@ -57,51 +56,44 @@ class LinkedList {
 
 
     getTopNodeAsArray(count, afterId) {
-        let todoItems = []
-
-        if (count <= 0) {
-            return todoItems
-        }
-
         const parameters = {
-            todoItems: todoItems,
+            todoItems: [],
             count: count,
-            addNode: function (node, todoItems) { todoItems.push(node) },
-            getNext: function (node) { return node.next }
+            addNode: (node, todoItems) => todoItems.push(node),
+            getNext: (node) => node.next,
+            cursorId: afterId,
+            firstNode: this.#head
         }
-
-        if (afterId == undefined && this.#head) {
-            parameters.node = this.#head
-            this.#fillArrayWithNodes(parameters);
-        }
-
-        if (afterId != undefined && this.#nodeIdToNode[afterId] && this.#nodeIdToNode[afterId].next) {
-            parameters.node = this.#nodeIdToNode[afterId].next
-            this.#fillArrayWithNodes(parameters);
-        }
-
-        return todoItems
+        return this.#getNodeAsArray(parameters)
     }
 
-    getLastNodeAsArray(count) {
-        let todoItems = []
+    getLastNodeAsArray(count, beforeId) {
+        const parameters = {
+            todoItems: [],
+            count: count,
+            addNode: (node, todoItems) => todoItems.unshift(node),
+            getNext: (node) => node.prev,
+            cursorId: beforeId,
+            firstNode: this.#tail
+        }
+        return this.#getNodeAsArray(parameters)
+    }
 
-        if (count <= 0) {
-            return todoItems
+    #getNodeAsArray(parameters) {
+        if (parameters.count <= 0) {
+            return parameters.todoItems
         }
 
-        if (this.#tail) {
-            const parameters = {
-                todoItems: todoItems,
-                count: count,
-                node: this.#tail,
-                addNode: (node, todoItems) => todoItems.unshift(node),
-                getNext: (node) => node.prev
-            }
+        if (parameters.cursorId == undefined && parameters.firstNode) {
+            parameters.node = parameters.firstNode
             this.#fillArrayWithNodes(parameters);
         }
-
-        return todoItems
+        
+        if (parameters.cursorId != undefined && this.#nodeIdToNode[parameters.cursorId] && parameters.getNext(this.#nodeIdToNode[parameters.cursorId])) {
+            parameters.node = parameters.getNext(this.#nodeIdToNode[parameters.cursorId])
+            this.#fillArrayWithNodes(parameters);
+        }
+        return parameters.todoItems
     }
 
     removeNode(id) {
@@ -167,6 +159,8 @@ class LinkedList {
             this.#head.next = node;
             node.prev = this.#head;
         }
+
+        this.#tail = node;
     }
 
     #fillArrayWithAllNodes(array) {
@@ -232,9 +226,11 @@ export class TodoList {
     getTop(count, afterId = undefined) {
         return this.#todoList.getTopNodeAsArray(count, afterId)
     }
-    getLast(count) {
-        return this.#todoList.getLastNodeAsArray(count)
+
+    getLast(count, beforeId = undefined) {
+        return this.#todoList.getLastNodeAsArray(count, beforeId)
     }
+
     removeById(id) {
         this.#todoList.removeNode(id)
     }
