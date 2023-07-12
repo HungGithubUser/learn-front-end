@@ -2,6 +2,7 @@
 
 import { DIV_TAG_NAME, INPUT_TAG_NAME, ORDERED_LIST_TAG_NAME } from './constants.dom.js'
 import { TodoListDomBuilder } from './todolist.dombuilder.js'
+import { TodoListPaginator } from './todolist.paginator.js'
 
 export class TodoListViewBuilder {
     #todoList
@@ -10,7 +11,7 @@ export class TodoListViewBuilder {
     #hasCompleteTaskToggleOnItemClick
     #outerDivElementCssClass
     #inputElementCssClass
-    #hasPagination
+    #todoListPaginator
 
     constructor(todoList) {
         this.#todoList = todoList
@@ -42,7 +43,7 @@ export class TodoListViewBuilder {
     }
 
     withPagination() {
-        this.#hasPagination = true
+        this.#todoListPaginator = new TodoListPaginator(this.#todoList)
         return this;
     }
 
@@ -81,6 +82,10 @@ export class TodoListViewBuilder {
         }
 
         htmlElementToBeManipulated.appendChild(todoOrderedList)
+
+        if (this.#todoListPaginator) {
+            htmlElementToBeManipulated.appendChild(this.#todoListPaginator.getPaginator())
+        }
     }
 
     #getInputElementForAddingTodoList() {
@@ -134,6 +139,10 @@ export class TodoListViewBuilder {
 
         if (this.#hasCompleteTaskToggleOnItemClick) {
             domBuilder = domBuilder.withListItemsCursorPointer()
+        }
+
+        if (this.#todoListPaginator) {
+            return this.#todoListPaginator.getTodoList((x) => domBuilder.build(x))
         }
 
         return domBuilder.build(this.#todoList.getAll())

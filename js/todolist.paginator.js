@@ -1,3 +1,5 @@
+import { DEFAULT_TODO_LIST_ITEM_PAGE_SIZE, NAV_TAG_NAME } from "./constants.dom.js"
+
 export class TodoListPaginator {
     #todoList
 
@@ -6,6 +8,10 @@ export class TodoListPaginator {
     }
 
     getTodoList(createTodoListDomByListItems) {
-        createTodoListDomByListItems(this.#todoList.getAll())
+        return createTodoListDomByListItems(this.#todoList.getTop(DEFAULT_TODO_LIST_ITEM_PAGE_SIZE))
+    }
+
+    getPaginator() {
+        return document.createElement(NAV_TAG_NAME)
     }
 }

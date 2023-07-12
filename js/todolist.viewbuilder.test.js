@@ -101,7 +101,8 @@ test('should not exists complete buttons when built without complete buttons', (
 })
 
 test('should have pagination feature', () => {
-    let actualWithPagination = new TodoListViewBuilder(todoList).withPagination().build()
+    let sutWithPagination = new TodoListViewBuilder(todoList).withPagination()
+    let actualWithPagination = sutWithPagination.build()
     expect(getLastChild(actualWithPagination)).toBeTruthy();
     expect(getLastChild(actualWithPagination).tagName.toUpperCase()).toEqual(NAV_TAG_NAME.toUpperCase());
 })

@@ -18,6 +18,7 @@ class ListItem {
     }
 }
 
+
 class LinkedList {
     #nodeIdToNode
     #currentId
@@ -62,7 +63,7 @@ class LinkedList {
             addNode: (node, todoItems) => todoItems.push(node),
             getNext: (node) => node.next,
             cursorId: afterId,
-            firstNode: this.#head
+            firstNode: this.#head,
         }
         return this.#getNodeAsArray(parameters)
     }
@@ -74,26 +75,9 @@ class LinkedList {
             addNode: (node, todoItems) => todoItems.unshift(node),
             getNext: (node) => node.prev,
             cursorId: beforeId,
-            firstNode: this.#tail
+            firstNode: this.#tail,
         }
         return this.#getNodeAsArray(parameters)
-    }
-
-    #getNodeAsArray(parameters) {
-        if (parameters.count <= 0) {
-            return parameters.todoItems
-        }
-
-        if (parameters.cursorId == undefined && parameters.firstNode) {
-            parameters.node = parameters.firstNode
-            this.#fillArrayWithNodes(parameters);
-        }
-        
-        if (parameters.cursorId != undefined && this.#nodeIdToNode[parameters.cursorId] && parameters.getNext(this.#nodeIdToNode[parameters.cursorId])) {
-            parameters.node = parameters.getNext(this.#nodeIdToNode[parameters.cursorId])
-            this.#fillArrayWithNodes(parameters);
-        }
-        return parameters.todoItems
     }
 
     removeNode(id) {
@@ -149,6 +133,24 @@ class LinkedList {
         return node;
     }
 
+    #getNodeAsArray(parameters) {
+        if (parameters.count <= 0) {
+            return parameters.todoItems
+        }
+
+        if (this.#shouldAppendFirstNode(parameters)) {
+            parameters.node = parameters.firstNode
+            this.#fillArrayWithNodes(parameters);
+        }
+
+        if (this.#shouldAppendCursorPaginatedNode(parameters, this.#nodeIdToNode)) {
+            parameters.node = parameters.getNext(this.#nodeIdToNode[parameters.cursorId])
+            this.#fillArrayWithNodes(parameters);
+        }
+
+        return parameters.todoItems
+    }
+
     #appendNodeToEndOfList(node) {
         if (this.#tail) {
             this.#tail.next = node;
@@ -170,6 +172,17 @@ class LinkedList {
             array.push(next);
             next = next.next;
         }
+    }
+
+
+    #shouldAppendFirstNode(parameters) {
+        return parameters.cursorId == undefined && parameters.firstNode
+    }
+
+    #shouldAppendCursorPaginatedNode(parameters) {
+        return parameters.cursorId != undefined &&
+            this.#nodeIdToNode[parameters.cursorId] &&
+            parameters.getNext(this.#nodeIdToNode[parameters.cursorId])
     }
 
     #fillArrayWithNodes(parameters) {
